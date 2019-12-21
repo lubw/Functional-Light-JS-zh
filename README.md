@@ -12,20 +12,18 @@
 本项目基于 vuepress 进行开发，以提供比 github mardown 更佳的阅读体验，依赖于 `node.js`、`yarn`、`vuepress` 等环境
 
 ```sh
-# node
-node -v
-> v10.14.1
-# yarn
-yarn -v
-> 1.13.0
 # vuepress
 yarn global add vuepress
 
 # 本地开发
 git clone https://github.com/gdut-yy/Functional-Light-JS-zh.git
-cd Functional-Light-JS-zh
+cd Functional-Light-JS-zh/
 yarn docs:dev
 
 # 本地阅读
-http://localhost:8080/
+http://localhost:8080/doc-fljs/
 ```
+
+## License
+
+[MIT](https://github.com/gdut-yy/Functional-Light-JS-zh/blob/master/LICENSE)
