@@ -3,7 +3,7 @@
 
 感谢原作！原 repo 地址：[https://github.com/getify/Functional-Light-JS](https://github.com/getify/Functional-Light-JS)
 
-在线阅读：[https://gdut-yy.github.io/module_book/JS/Functional-Light-JS-zh/ch1.html](https://gdut-yy.github.io/module_book/JS/Functional-Light-JS-zh/ch1.html)
+在线阅读：[http://gdut_yy.gitee.io/doc-fljs/ch1.html](http://gdut_yy.gitee.io/doc-fljs/ch1.html)
 
 <img src="./docs/images/marketing/front-cover-small.png" width=40%>
 
