@@ -1,8 +1,6 @@
-# 轻量函数式 JavaScript 中文
+# 目录
 
 <img src="./images/marketing/front-cover-small.png" width="28%" />
-
-## 目录
 
 - [序](./foreword.md)
 - [前言](./preface.md)
