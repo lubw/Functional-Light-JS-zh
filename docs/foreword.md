@@ -18,4 +18,4 @@ Kyle 是一位了不起的教师 —— 对完整全貌的不懈追求，不留�
 
 这本书是你 FP 之旅的绝妙起点。启程吧 Kyle ……
 
-*-Brian Lonsdorf (@drboolean)*
+_-Brian Lonsdorf (@drboolean)_

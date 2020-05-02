@@ -10,7 +10,7 @@ Transducing 意味着带有变形（transforming）的递减（reduction）。
 
 我知道，它听起来就像一个杂乱的词汇 —— 它使人糊涂的地方要比它澄清的东西多。但还是让我们看看它能有多么强大。实际上，我认为一旦你掌握了轻量函数式编程的原理，它就是你能力的最佳展示。
 
-正如本书的其他部分一样，我的方式是首先解释 *为什么*，然后在讲解 *如何做*，最后归结为一种简化的，可重用的 *什么*。这通常与其他许多人的教授方法相反，但我认为这种方式可以使你更深入地学习。
+正如本书的其他部分一样，我的方式是首先解释 _为什么_，然后在讲解 _如何做_，最后归结为一种简化的，可重用的 _什么_。这通常与其他许多人的教授方法相反，但我认为这种方式可以使你更深入地学习。
 
 ## 首先，为什么
 
@@ -18,23 +18,20 @@ Transducing 意味着带有变形（transforming）的递减（reduction）。
 
 ```js
 function isLongEnough(str) {
-    return str.length >= 5;
+  return str.length >= 5;
 }
 
 function isShortEnough(str) {
-    return str.length <= 10;
+  return str.length <= 10;
 }
 ```
 
 在[第三章中，我们使用了这些判定函数](ch3.md/#user-content-shortlongenough)来测试一个单词。然后在第九章中，我们学习了如何[使用 `filter(..）` 之类的列表操作](ch9.md/#filter)重复这样的测试。例如：
 
 ```js
-var words = [ "You", "have", "written", "something", "very",
-    "interesting" ];
+var words = ["You", "have", "written", "something", "very", "interesting"];
 
-words
-.filter( isLongEnough )
-.filter( isShortEnough );
+words.filter(isLongEnough).filter(isShortEnough);
 // ["written","something"]
 ```
 
@@ -48,10 +45,10 @@ words
 
 ```js
 zip(
-    list1.filter( isLongEnough ).filter( isShortEnough ),
-    list2.filter( isLongEnough ).filter( isShortEnough ),
-    list3.filter( isLongEnough ).filter( isShortEnough )
-)
+  list1.filter(isLongEnough).filter(isShortEnough),
+  list2.filter(isLongEnough).filter(isShortEnough),
+  list3.filter(isLongEnough).filter(isShortEnough)
+);
 ```
 
 很啰嗦，对吧？
@@ -60,7 +57,7 @@ zip(
 
 ```js
 function isCorrectLength(str) {
-    return isLongEnough( str ) && isShortEnough( str );
+  return isLongEnough(str) && isShortEnough(str);
 }
 ```
 
@@ -69,10 +66,7 @@ function isCorrectLength(str) {
 在[第九章中，我们谈到了熔合](ch9.md/#fusion) —— 组合相邻的映射函数。回想一下：
 
 ```js
-words
-.map(
-    pipe( removeInvalidChars, upper, elide )
-);
+words.map(pipe(removeInvalidChars, upper, elide));
 ```
 
 不幸的是，组合相邻的判定函数不像组合相邻的映射函数那么简单。究其原因，考虑一下判定函数的 “外形（shape）” —— 某种描述输入和输出签名的学术化方式。它接收一个单独的值，并返回一个 `true` 或 `false`。
@@ -87,10 +81,10 @@ words
 
 ```js
 words
-.map( strUppercase )
-.filter( isLongEnough )
-.filter( isShortEnough )
-.reduce( strConcat, "" );
+  .map(strUppercase)
+  .filter(isLongEnough)
+  .filter(isShortEnough)
+  .reduce(strConcat, "");
 // "WRITTENSOMETHING"
 ```
 
@@ -111,29 +105,33 @@ words
 我们要施展的第一个技巧是将 `filter(..)` 和 `map(..)` 调用表达为 `reduce(..)` 调用。回忆一下[我们在第九章中是如何做的](ch9.md/#map-as-reduce)：
 
 ```js
-function strUppercase(str) { return str.toUpperCase(); }
-function strConcat(str1,str2) { return str1 + str2; }
-
-function strUppercaseReducer(list,str) {
-    list.push( strUppercase( str ) );
-    return list;
+function strUppercase(str) {
+  return str.toUpperCase();
+}
+function strConcat(str1, str2) {
+  return str1 + str2;
 }
 
-function isLongEnoughReducer(list,str) {
-    if (isLongEnough( str )) list.push( str );
-    return list;
+function strUppercaseReducer(list, str) {
+  list.push(strUppercase(str));
+  return list;
 }
 
-function isShortEnoughReducer(list,str) {
-    if (isShortEnough( str )) list.push( str );
-    return list;
+function isLongEnoughReducer(list, str) {
+  if (isLongEnough(str)) list.push(str);
+  return list;
+}
+
+function isShortEnoughReducer(list, str) {
+  if (isShortEnough(str)) list.push(str);
+  return list;
 }
 
 words
-.reduce( strUppercaseReducer, [] )
-.reduce( isLongEnoughReducer, [] )
-.reduce( isShortEnoughReducer, [] )
-.reduce( strConcat, "" );
+  .reduce(strUppercaseReducer, [])
+  .reduce(isLongEnoughReducer, [])
+  .reduce(isShortEnoughReducer, [])
+  .reduce(strConcat, "");
 // "WRITTENSOMETHING"
 ```
 
@@ -144,18 +142,18 @@ words
 在[第九章中，我们作弊](ch9.md/#user-content-reducecheating)并使用了 `list.push(..)` 作为一种副作用进行改变数组，而不是创建一个全新的数组并在上面连接。现在让我们更正式一些：
 
 ```js
-function strUppercaseReducer(list,str) {
-    return [ ...list, strUppercase( str ) ];
+function strUppercaseReducer(list, str) {
+  return [...list, strUppercase(str)];
 }
 
-function isLongEnoughReducer(list,str) {
-    if (isLongEnough( str )) return [ ...list, str ];
-    return list;
+function isLongEnoughReducer(list, str) {
+  if (isLongEnough(str)) return [...list, str];
+  return list;
 }
 
-function isShortEnoughReducer(list,str) {
-    if (isShortEnough( str )) return [ ...list, str ];
-    return list;
+function isShortEnoughReducer(list, str) {
+  if (isShortEnough(str)) return [...list, str];
+  return list;
 }
 ```
 
@@ -167,36 +165,36 @@ function isShortEnoughReducer(list,str) {
 
 ```js
 function filterReducer(predicateFn) {
-    return function reducer(list,val){
-        if (predicateFn( val )) return [ ...list, val ];
-        return list;
-    };
+  return function reducer(list, val) {
+    if (predicateFn(val)) return [...list, val];
+    return list;
+  };
 }
 
-var isLongEnoughReducer = filterReducer( isLongEnough );
-var isShortEnoughReducer = filterReducer( isShortEnough );
+var isLongEnoughReducer = filterReducer(isLongEnough);
+var isShortEnoughReducer = filterReducer(isShortEnough);
 ```
 
 为了得到一个能够生成任意映射-递减函数的工具，让我们对 `mapperFn(..)` 进行相同的参数化：
 
 ```js
 function mapReducer(mapperFn) {
-    return function reducer(list,val){
-        return [ ...list, mapperFn( val ) ];
-    };
+  return function reducer(list, val) {
+    return [...list, mapperFn(val)];
+  };
 }
 
-var strToUppercaseReducer = mapReducer( strUppercase );
+var strToUppercaseReducer = mapReducer(strUppercase);
 ```
 
 我们链条看起来没变：
 
 ```js
 words
-.reduce( strUppercaseReducer, [] )
-.reduce( isLongEnoughReducer, [] )
-.reduce( isShortEnoughReducer, [] )
-.reduce( strConcat, "" );
+  .reduce(strUppercaseReducer, [])
+  .reduce(isLongEnoughReducer, [])
+  .reduce(isShortEnoughReducer, [])
+  .reduce(strConcat, "");
 ```
 
 ### 抽取共通的组合逻辑
@@ -215,16 +213,16 @@ return list;
 让我们为这个共同逻辑定义一个帮助函数。但我们如何称呼它？
 
 ```js
-function WHATSITCALLED(list,val) {
-    return [ ...list, val ];
+function WHATSITCALLED(list, val) {
+  return [...list, val];
 }
 ```
 
 检视一下 `WHATSITCALLED(..)` 函数在做什么，它接收两个值（一个数组和另一个值）并通过创建一个新数组并将值连接到它末尾来将它们 “结合”。非常没有创意，但我们可以将它命名为 `listCombine(..)`：
 
 ```js
-function listCombine(list,val) {
-    return [ ...list, val ];
+function listCombine(list, val) {
+  return [...list, val];
 }
 ```
 
@@ -232,16 +230,16 @@ function listCombine(list,val) {
 
 ```js
 function mapReducer(mapperFn) {
-    return function reducer(list,val){
-        return listCombine( list, mapperFn( val ) );
-    };
+  return function reducer(list, val) {
+    return listCombine(list, mapperFn(val));
+  };
 }
 
 function filterReducer(predicateFn) {
-    return function reducer(list,val){
-        if (predicateFn( val )) return listCombine( list, val );
-        return list;
-    };
+  return function reducer(list, val) {
+    if (predicateFn(val)) return listCombine(list, val);
+    return list;
+  };
 }
 ```
 
@@ -252,52 +250,50 @@ function filterReducer(predicateFn) {
 我们简单的 `listCombine(..)` 工具只是我们结合两个值的一种可能的方式。让我们将使用它的过程参数化，来时我们的递减函数更加一般化：
 
 ```js
-function mapReducer(mapperFn,combinerFn) {
-    return function reducer(list,val){
-        return combinerFn( list, mapperFn( val ) );
-    };
+function mapReducer(mapperFn, combinerFn) {
+  return function reducer(list, val) {
+    return combinerFn(list, mapperFn(val));
+  };
 }
 
-function filterReducer(predicateFn,combinerFn) {
-    return function reducer(list,val){
-        if (predicateFn( val )) return combinerFn( list, val );
-        return list;
-    };
+function filterReducer(predicateFn, combinerFn) {
+  return function reducer(list, val) {
+    if (predicateFn(val)) return combinerFn(list, val);
+    return list;
+  };
 }
 ```
 
 要使用这种形式的帮助函数：
 
 ```js
-var strToUppercaseReducer = mapReducer( strUppercase, listCombine );
-var isLongEnoughReducer = filterReducer( isLongEnough, listCombine );
-var isShortEnoughReducer = filterReducer( isShortEnough, listCombine );
+var strToUppercaseReducer = mapReducer(strUppercase, listCombine);
+var isLongEnoughReducer = filterReducer(isLongEnough, listCombine);
+var isShortEnoughReducer = filterReducer(isShortEnough, listCombine);
 ```
 
 将这些工具定义为接收两个参数而非一个对于组合来说不太方便，所以让我们使用我们的 `curry(..)` 方式：
 
 ```js
-var curriedMapReducer =
-    curry( function mapReducer(mapperFn,combinerFn){
-        return function reducer(list,val){
-            return combinerFn( list, mapperFn( val ) );
-        };
-    } );
+var curriedMapReducer = curry(function mapReducer(mapperFn, combinerFn) {
+  return function reducer(list, val) {
+    return combinerFn(list, mapperFn(val));
+  };
+});
 
-var curriedFilterReducer =
-    curry( function filterReducer(predicateFn,combinerFn){
-        return function reducer(list,val){
-            if (predicateFn( val )) return combinerFn( list, val );
-            return list;
-        };
-    } );
+var curriedFilterReducer = curry(function filterReducer(
+  predicateFn,
+  combinerFn
+) {
+  return function reducer(list, val) {
+    if (predicateFn(val)) return combinerFn(list, val);
+    return list;
+  };
+});
 
-var strToUppercaseReducer =
-    curriedMapReducer( strUppercase )( listCombine );
-var isLongEnoughReducer =
-    curriedFilterReducer( isLongEnough )( listCombine );
-var isShortEnoughReducer =
-    curriedFilterReducer( isShortEnough )( listCombine );
+var strToUppercaseReducer = curriedMapReducer(strUppercase)(listCombine);
+var isLongEnoughReducer = curriedFilterReducer(isLongEnough)(listCombine);
+var isShortEnoughReducer = curriedFilterReducer(isShortEnough)(listCombine);
 ```
 
 这看起来烦冗了一些，而且看起来可能不是非常有用。
@@ -311,9 +307,9 @@ var isShortEnoughReducer =
 让我们考虑一下刚才柯里化后的函数，但不带 `listCombine(..)` 函数被传入的部分：
 
 ```js
-var x = curriedMapReducer( strUppercase );
-var y = curriedFilterReducer( isLongEnough );
-var z = curriedFilterReducer( isShortEnough );
+var x = curriedMapReducer(strUppercase);
+var y = curriedFilterReducer(isLongEnough);
+var z = curriedFilterReducer(isShortEnough);
 ```
 
 考虑所有这三个中间函数的外形，`x(..)`、`y(..)`、和 `z(..)`。每一个都期待一个单独的组合函数，并为它生成一个递减函数。
@@ -321,17 +317,17 @@ var z = curriedFilterReducer( isShortEnough );
 记住，如果我们想要得到所有这些函数的独立的递减函数，我们可以这样做：
 
 ```js
-var upperReducer = x( listCombine );
-var longEnoughReducer = y( listCombine );
-var shortEnoughReducer = z( listCombine );
+var upperReducer = x(listCombine);
+var longEnoughReducer = y(listCombine);
+var shortEnoughReducer = z(listCombine);
 ```
 
 但如果没有调用 `y(listCombine)`，而是调用了 `y(z)` 你会得到什么？基本上是说，当将 `z` 作为 `y(..)` 的 `combinerFn(..)` 传入时发生了什么？这会返回一个内部看起来像这样的递减函数：
 
 ```js
-function reducer(list,val) {
-    if (isLongEnough( val )) return z( list, val );
-    return list;
+function reducer(list, val) {
+  if (isLongEnough(val)) return z(list, val);
+  return list;
 }
 ```
 
@@ -340,8 +336,8 @@ function reducer(list,val) {
 相反让我们看看组合 `y(z(listCombine))`。我们将它分解为两个分离的步骤：
 
 ```js
-var shortEnoughReducer = z( listCombine );
-var longAndShortEnoughReducer = y( shortEnoughReducer );
+var shortEnoughReducer = z(listCombine);
+var longAndShortEnoughReducer = y(shortEnoughReducer);
 ```
 
 我们创建了 `shortEnoughReducer(..)`，然后我们将它作为 `combinerFn(..)` 传递给 `y(..)` 而非调用 `y(listCombine)`；这个新的调用生成了 `longAndShortEnoughReducer(..)`。将这一句重读几遍，直到你领悟为止。
@@ -350,15 +346,15 @@ var longAndShortEnoughReducer = y( shortEnoughReducer );
 
 ```js
 // shortEnoughReducer，来自 z(..) 调用:
-function reducer(list,val) {
-    if (isShortEnough( val )) return listCombine( list, val );
-    return list;
+function reducer(list, val) {
+  if (isShortEnough(val)) return listCombine(list, val);
+  return list;
 }
 
 // longAndShortEnoughReducer，来自 y(..) 调用:
-function reducer(list,val) {
-    if (isLongEnough( val )) return shortEnoughReducer( list, val );
-    return list;
+function reducer(list, val) {
+  if (isLongEnough(val)) return shortEnoughReducer(list, val);
+  return list;
 }
 ```
 
@@ -369,13 +365,13 @@ function reducer(list,val) {
 让我们使用几个不同的值来测试一下我们的 `longAndShortEnoughReducer(..)`：
 
 ```js
-longAndShortEnoughReducer( [], "nope" );
+longAndShortEnoughReducer([], "nope");
 // []
 
-longAndShortEnoughReducer( [], "hello" );
+longAndShortEnoughReducer([], "hello");
 // ["hello"]
 
-longAndShortEnoughReducer( [], "hello world" );
+longAndShortEnoughReducer([], "hello world");
 // []
 ```
 
@@ -386,16 +382,16 @@ longAndShortEnoughReducer( [], "hello world" );
 现在，把 `x(..)` （大写递减函数生成器）代入组合之中：
 
 ```js
-var longAndShortEnoughReducer = y( z( listCombine) );
-var upperLongAndShortEnoughReducer = x( longAndShortEnoughReducer );
+var longAndShortEnoughReducer = y(z(listCombine));
+var upperLongAndShortEnoughReducer = x(longAndShortEnoughReducer);
 ```
 
 正如 `upperLongAndShortEnoughReducer(..)` 这个名字所暗示的，它一次完成所有三个步骤 —— 一个映射和两个过滤！它内部看起来就像这样：
 
 ```js
 // upperLongAndShortEnoughReducer:
-function reducer(list,val) {
-    return longAndShortEnoughReducer( list, strUppercase( val ) );
+function reducer(list, val) {
+  return longAndShortEnoughReducer(list, strUppercase(val));
 }
 ```
 
@@ -406,13 +402,13 @@ function reducer(list,val) {
 现在我们验证一下：
 
 ```js
-upperLongAndShortEnoughReducer( [], "nope" );
+upperLongAndShortEnoughReducer([], "nope");
 // []
 
-upperLongAndShortEnoughReducer( [], "hello" );
+upperLongAndShortEnoughReducer([], "hello");
 // ["HELLO"]
 
-upperLongAndShortEnoughReducer( [], "hello world" );
+upperLongAndShortEnoughReducer([], "hello world");
 // []
 ```
 
@@ -421,13 +417,13 @@ upperLongAndShortEnoughReducer( [], "hello world" );
 概括一下我们目前身在何处：
 
 ```js
-var x = curriedMapReducer( strUppercase );
-var y = curriedFilterReducer( isLongEnough );
-var z = curriedFilterReducer( isShortEnough );
+var x = curriedMapReducer(strUppercase);
+var y = curriedFilterReducer(isLongEnough);
+var z = curriedFilterReducer(isShortEnough);
 
-var upperLongAndShortEnoughReducer = x( y( z( listCombine ) ) );
+var upperLongAndShortEnoughReducer = x(y(z(listCombine)));
 
-words.reduce( upperLongAndShortEnoughReducer, [] );
+words.reduce(upperLongAndShortEnoughReducer, []);
 // ["WRITTEN","SOMETHING"]
 ```
 
@@ -437,14 +433,14 @@ words.reduce( upperLongAndShortEnoughReducer, [] );
 
 ```js
 var composition = compose(
-    curriedMapReducer( strUppercase ),
-    curriedFilterReducer( isLongEnough ),
-    curriedFilterReducer( isShortEnough )
+  curriedMapReducer(strUppercase),
+  curriedFilterReducer(isLongEnough),
+  curriedFilterReducer(isShortEnough)
 );
 
-var upperLongAndShortEnoughReducer = composition( listCombine );
+var upperLongAndShortEnoughReducer = composition(listCombine);
 
-words.reduce( upperLongAndShortEnoughReducer, [] );
+words.reduce(upperLongAndShortEnoughReducer, []);
 // ["WRITTEN","SOMETHING"]
 ```
 
@@ -458,25 +454,24 @@ words.reduce( upperLongAndShortEnoughReducer, [] );
 
 ```js
 var transducer = compose(
-    curriedMapReducer( strUppercase ),
-    curriedFilterReducer( isLongEnough ),
-    curriedFilterReducer( isShortEnough )
+  curriedMapReducer(strUppercase),
+  curriedFilterReducer(isLongEnough),
+  curriedFilterReducer(isShortEnough)
 );
 
-words
-.reduce( transducer( listCombine ), [] );
+words.reduce(transducer(listCombine), []);
 // ["WRITTEN","SOMETHING"]
 ```
 
-**注意：** 我们应当关注一下前两个代码段中的 `compose(..)` 顺序，它可能有些令人糊涂。回忆一下我们原来例子中的链条，我们 `map(strUppercase)` 然后 `filter(isLongEnough)` 最后 `filter(isShortEnough)`；这些操作确实是按照这样的顺序发生的。但是在[第四章](ch4.md/#user-content-generalcompose)中，我们学习了 `compose(..)` 通常会以函数被罗列的相反方向运行它们。所以，为什么我们在 *这里* 不需要反转顺序来得到我们期望的相同结果呢？来自于每个递减函数的 `combinerFn(..)` 的抽象在底层反转了操作实际的实施顺序。所以与直觉相悖地，当你组合一个 transducer 时，你实际上要以你所期望的函数执行的顺序来罗列它们！
+**注意：** 我们应当关注一下前两个代码段中的 `compose(..)` 顺序，它可能有些令人糊涂。回忆一下我们原来例子中的链条，我们 `map(strUppercase)` 然后 `filter(isLongEnough)` 最后 `filter(isShortEnough)`；这些操作确实是按照这样的顺序发生的。但是在[第四章](ch4.md/#user-content-generalcompose)中，我们学习了 `compose(..)` 通常会以函数被罗列的相反方向运行它们。所以，为什么我们在 _这里_ 不需要反转顺序来得到我们期望的相同结果呢？来自于每个递减函数的 `combinerFn(..)` 的抽象在底层反转了操作实际的实施顺序。所以与直觉相悖地，当你组合一个 transducer 时，你实际上要以你所期望的函数执行的顺序来罗列它们！
 
 #### 列表结合：纯粹 vs 不纯粹
 
 一个快速的旁注，让我们重温一下 `listCombine(..)`组合函数的实现：
 
 ```js
-function listCombine(list,val) {
-    return [ ...list, val ];
+function listCombine(list, val) {
+  return [...list, val];
 }
 ```
 
@@ -485,9 +480,9 @@ function listCombine(list,val) {
 性能好一些的，不纯粹版本：
 
 ```js
-function listCombine(list,val) {
-    list.push( val );
-    return list;
+function listCombine(list, val) {
+  list.push(val);
+  return list;
 }
 ```
 
@@ -506,9 +501,7 @@ function listCombine(list,val) {
 至此，这就是我们从 transducing 中衍生出的东西：
 
 ```js
-words
-.reduce( transducer( listCombine ), [] )
-.reduce( strConcat, "" );
+words.reduce(transducer(listCombine), []).reduce(strConcat, "");
 // WRITTENSOMETHING
 ```
 
@@ -519,9 +512,14 @@ words
 但让我肩并肩地看看这两个函数：
 
 ```js
-function strConcat(str1,str2) { return str1 + str2; }
+function strConcat(str1, str2) {
+  return str1 + str2;
+}
 
-function listCombine(list,val) { list.push( val ); return list; }
+function listCombine(list, val) {
+  list.push(val);
+  return list;
+}
 ```
 
 如果你眯起眼，你就能看到这两个函数几乎是可以互换的。它们操作不同的数据类型，但是在概念上它们做的是相同的事情：将两个值结合为一个。
@@ -531,7 +529,7 @@ function listCombine(list,val) { list.push( val ); return list; }
 这意味着如果我们的最终目标是得到一个字符串链接而非一个列表的话，我们就可以使用它替换 `listCombine(..)`：
 
 ```js
-words.reduce( transducer( strConcat ), "" );
+words.reduce(transducer(strConcat), "");
 // WRITTENSOMETHING
 ```
 
@@ -546,29 +544,27 @@ words.reduce( transducer( strConcat ), "" );
 回忆一下我们早先定义的帮助函数；为了清晰让我们重命名它们：
 
 ```js
-var transduceMap =
-    curry( function mapReducer(mapperFn,combinerFn){
-        return function reducer(list,v){
-            return combinerFn( list, mapperFn( v ) );
-        };
-    } );
+var transduceMap = curry(function mapReducer(mapperFn, combinerFn) {
+  return function reducer(list, v) {
+    return combinerFn(list, mapperFn(v));
+  };
+});
 
-var transduceFilter =
-    curry( function filterReducer(predicateFn,combinerFn){
-        return function reducer(list,v){
-            if (predicateFn( v )) return combinerFn( list, v );
-            return list;
-        };
-    } );
+var transduceFilter = curry(function filterReducer(predicateFn, combinerFn) {
+  return function reducer(list, v) {
+    if (predicateFn(v)) return combinerFn(list, v);
+    return list;
+  };
+});
 ```
 
 再回忆一下我们是这样使用它们的：
 
 ```js
 var transducer = compose(
-    transduceMap( strUppercase ),
-    transduceFilter( isLongEnough ),
-    transduceFilter( isShortEnough )
+  transduceMap(strUppercase),
+  transduceFilter(isLongEnough),
+  transduceFilter(isShortEnough)
 );
 ```
 
@@ -577,9 +573,9 @@ var transducer = compose(
 但是为了更具声明性地表达所有这些 transducing 步骤，让我们制造一个实施所有这些步骤的 `transduce(..)` 工具：
 
 ```js
-function transduce(transducer,combinerFn,initialValue,list) {
-    var reducer = transducer( combinerFn );
-    return list.reduce( reducer, initialValue );
+function transduce(transducer, combinerFn, initialValue, list) {
+  var reducer = transducer(combinerFn);
+  return list.reduce(reducer, initialValue);
 }
 ```
 
@@ -587,15 +583,15 @@ function transduce(transducer,combinerFn,initialValue,list) {
 
 ```js
 var transducer = compose(
-    transduceMap( strUppercase ),
-    transduceFilter( isLongEnough ),
-    transduceFilter( isShortEnough )
+  transduceMap(strUppercase),
+  transduceFilter(isLongEnough),
+  transduceFilter(isShortEnough)
 );
 
-transduce( transducer, listCombine, [], words );
+transduce(transducer, listCombine, [], words);
 // ["WRITTEN","SOMETHING"]
 
-transduce( transducer, strConcat, "", words );
+transduce(transducer, strConcat, "", words);
 // WRITTENSOMETHING
 ```
 
@@ -607,15 +603,15 @@ transduce( transducer, strConcat, "", words );
 
 ```js
 var transformer = transducers.comp(
-    transducers.map( strUppercase ),
-    transducers.filter( isLongEnough ),
-    transducers.filter( isShortEnough )
+  transducers.map(strUppercase),
+  transducers.filter(isLongEnough),
+  transducers.filter(isShortEnough)
 );
 
-transducers.transduce( transformer, listCombine, [], words );
+transducers.transduce(transformer, listCombine, [], words);
 // ["WRITTEN","SOMETHING"]
 
-transducers.transduce( transformer, strConcat, "", words );
+transducers.transduce(transformer, strConcat, "", words);
 // WRITTENSOMETHING
 ```
 
@@ -630,20 +626,17 @@ transducers.transduce( transformer, strConcat, "", words );
 因为调用 `transformer(..)` 会生成一个变形对象，而且不是一个典型的二元 transduce-递减函数，所以库还提供了 `toFn(..)` 来将这个变形对象适配为可以被原生数组 `reduce(..)` 使用的函数：
 
 ```js
-words.reduce(
-    transducers.toFn( transformer, strConcat ),
-    ""
-);
+words.reduce(transducers.toFn(transformer, strConcat), "");
 // WRITTENSOMETHING
 ```
 
 `into(..)` 是库提供的另一个帮助函数，它根据被指定的空/初始值类型自动地选择一个默认组合函数：
 
 ```js
-transducers.into( [], transformer, words );
+transducers.into([], transformer, words);
 // ["WRITTEN","SOMETHING"]
 
-transducers.into( "", transformer, words );
+transducers.into("", transformer, words);
 // WRITTENSOMETHING
 ```
 

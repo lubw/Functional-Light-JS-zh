@@ -24,8 +24,8 @@ var x = 2;
 
 x.length = 4;
 
-x;              // 2
-x.length;       // undefined
+x; // 2
+x.length; // undefined
 ```
 
 数字一般没有 `length` 属性可用，所以设置 `x.length = 4` 是在试图添加一个新属性，而且它无声地失败了（或者说被忽略/丢弃了，这要看你的视角）；`x` 继续持有简单基本类型数字 `2`。
@@ -35,7 +35,7 @@ x.length;       // undefined
 要是你试着改变一个被明确封箱为对象表现形式的这样一个值呢？
 
 ```js
-var x = new Number( 2 );
+var x = new Number(2);
 
 // 可以工作
 x.length = 4;
@@ -48,12 +48,12 @@ x.length = 4;
 ```js
 var s = "hello";
 
-s[1];               // "e"
+s[1]; // "e"
 
 s[1] = "E";
 s.length = 10;
 
-s;                  // "hello"
+s; // "hello"
 ```
 
 除了能够像在一个数组中那样访问 `s[1]`，JS 字符串不是真正的数组。设置 `s[1] = "E"` 和 `s.length = 10` 都会无声地失败，就像上面的 `x.length = 4` 一样。在 strict 模式中，这些语句会失败，因为属性 `1` 和属性 `length` 在基本类型的 `string` 值上都是只读的。
@@ -63,31 +63,31 @@ s;                  // "hello"
 ```js
 "use strict";
 
-var s = new String( "hello" );
+var s = new String("hello");
 
-s[1] = "E";         // error
-s.length = 10;      // error
+s[1] = "E"; // error
+s.length = 10; // error
 
-s[42] = "?";        // OK
+s[42] = "?"; // OK
 
-s;                  // "hello"
+s; // "hello"
 ```
 
 ## 从值到值
 
 我们将在本章中更彻底地展开这个概念，但为了在开始的时候在我们的大脑中形成一个清晰的认识：值的不可变性不意味着我们不能拥有在程序运行的整个进程中一直改变的值。一个没有改变的值的程序可不是非常有趣！它也不意味着我们的变量不能持有不同的值。这些都是对值的不可变性的常见误解。
 
-值的不可变性意味着，*当* 我们需要在程序中改变状态时，我们必须创建并追踪一个新的值而不是改变一个既存的值。
+值的不可变性意味着，_当_ 我们需要在程序中改变状态时，我们必须创建并追踪一个新的值而不是改变一个既存的值。
 
 例如：
 
 ```js
 function addValue(arr) {
-    var newArr = [ ...arr, 4 ];
-    return newArr;
+  var newArr = [...arr, 4];
+  return newArr;
 }
 
-addValue( [1,2,3] );    // [1,2,3,4]
+addValue([1, 2, 3]); // [1,2,3,4]
 ```
 
 注意我们没有改变 `arr` 引用的数组，而是创建了一个新数组（`newArr`） —— 它包含既存的值外加新的值 `4`。
@@ -104,16 +104,16 @@ addValue( [1,2,3] );    // [1,2,3,4]
 
 ```js
 function updateLastLogin(user) {
-    var newUserRecord = Object.assign( {}, user );
-    newUserRecord.lastLogin = Date.now();
-    return newUserRecord;
+  var newUserRecord = Object.assign({}, user);
+  newUserRecord.lastLogin = Date.now();
+  return newUserRecord;
 }
 
 var user = {
-    // ..
+  // ..
 };
 
-user = updateLastLogin( user );
+user = updateLastLogin(user);
 ```
 
 ### 非本地
@@ -127,23 +127,23 @@ user = updateLastLogin( user );
 考虑如下代码：
 
 ```js
-var arr = [1,2,3];
+var arr = [1, 2, 3];
 
-foo( arr );
+foo(arr);
 
-console.log( arr[0] );
+console.log(arr[0]);
 ```
 
-表面上，你希望 `arr[0]` 依然是值 `1`。但它是吗？你不知道，因为 `foo(..)` *可能* 会使用你传递给它的引用改变这个数组。
+表面上，你希望 `arr[0]` 依然是值 `1`。但它是吗？你不知道，因为 `foo(..)` _可能_ 会使用你传递给它的引用改变这个数组。
 
 在前一章中我们已经看到了一种技巧可以避免这样的意外：
 
 ```js
-var arr = [1,2,3];
+var arr = [1, 2, 3];
 
-foo( arr.slice() );         // ha! a copy!
+foo(arr.slice()); // ha! a copy!
 
-console.log( arr[0] );      // 1
+console.log(arr[0]); // 1
 ```
 
 再过一会，我们将看到另一种保护我们自己的策略，使值不会出乎我们意料地被改变。
@@ -178,7 +178,7 @@ const x = 2;
 
 ```js
 // 试着改变 `x`，双手合十！
-x = 3;      // 错误！
+x = 3; // 错误！
 ```
 
 但同样地，我们没有在改变值的任何东西。我们试图给变量 `x` 重新赋值。卷入其中的值几乎是巧合。
@@ -186,7 +186,7 @@ x = 3;      // 错误！
 为了证明 `const` 与值的性质没有关系，考虑如下代码：
 
 ```js
-const x = [ 2 ];
+const x = [2];
 ```
 
 这个数组是常量吗？**不。** `x` 是一个常量，因为它不能被重新赋值了。但是这一行则完全没问题：
@@ -203,7 +203,7 @@ x[0] = 3;
 
 ### 意图
 
-`const` 的使用告诉你代码的读者 *这个* 变量将不会再次被赋值了。作为一种意图的信号，`const` 成为了 JavaScript 的一种受欢迎的增益，作为一种对代码可读性的全面改善而经常受到高度的赞扬。
+`const` 的使用告诉你代码的读者 _这个_ 变量将不会再次被赋值了。作为一种意图的信号，`const` 成为了 JavaScript 的一种受欢迎的增益，作为一种对代码可读性的全面改善而经常受到高度的赞扬。
 
 在我看来，这几乎就是炒作；这些主张中没有太多实质上的东西。以这种方式标示你的意图，我只能看到一点儿极其微弱的好处。而且当你把这与近十几年它造成的困惑 —— 暗示值的不可变性 —— 比起来的话，我认为 `const` 配不上它的地位。
 
@@ -213,9 +213,9 @@ x[0] = 3;
 // 许多代码
 
 {
-    const x = 2;
+  const x = 2;
 
-    // 几行代码
+  // 几行代码
 }
 
 // 许多代码
@@ -231,20 +231,20 @@ x[0] = 3;
 // 许多代码
 
 {
-    let x = 2;
+  let x = 2;
 
-    // 几行代码
+  // 几行代码
 }
 
 // 许多代码
 ```
 
-如果你看看 `let x = 2` 后面的几行代码；你很容易就能知道 `x` 实际上 *没有* 被重新赋值。与使用什么 `const` 声明来表示“不会给它重新赋值”相比 —— 实际上确实没有给它重新赋值！ —— 这对我来说是一种 **强烈得多的信号**。
+如果你看看 `let x = 2` 后面的几行代码；你很容易就能知道 `x` 实际上 _没有_ 被重新赋值。与使用什么 `const` 声明来表示“不会给它重新赋值”相比 —— 实际上确实没有给它重新赋值！ —— 这对我来说是一种 **强烈得多的信号**。
 
 另外，让我们考虑一下这段代码在第一眼看上去将会如何与读者交流：
 
 ```js
-const magicNums = [1,2,3,4];
+const magicNums = [1, 2, 3, 4];
 ```
 
 有没有那么一点可能（很可能？），你代码的读者将会（错误地）假设你的意图是绝不会改变这个数组？这在我看来是一个合理的推断。想象一下他们的困惑，如果你实际上允许 `magicNums` 引用的数组被改变。这不会令他们惊讶吗？
@@ -256,10 +256,10 @@ const magicNums = [1,2,3,4];
 但是 `const` 造成的麻烦不止于此。还记得我们在本章开头断言的，将值视为不可变意味着当我们需要改变状态时，我们必须创建一个新的值而非改变它吗？一旦你创建了一个新数组，你将如何处理它？要是你使用 `const` 来声明持有它的引用，你就不能再给它赋值了。
 
 ```js
-const magicNums = [1,2,3,4];
+const magicNums = [1, 2, 3, 4];
 
 // 稍后：
-magicNums = magicNums.concat( 42 );  // 哦，不能再次赋值
+magicNums = magicNums.concat(42); // 哦，不能再次赋值
 ```
 
 那么……接下来怎么办？
@@ -283,11 +283,11 @@ var a = "420";
 
 // 稍后
 
-a = Number( a );
+a = Number(a);
 
 // 稍后
 
-a = [ a ];
+a = [a];
 ```
 
 如果将 `"420"` 改变为 `420` 之后，不再需要原来的值 `"420"`，那么我认为对 `a` 进行重新赋值要比想一个诸如 `aNum` 之类的变量名更具可读性。
@@ -299,7 +299,7 @@ a = [ a ];
 有一种既便宜又简单的方法可以将一个可变的对象/数组/函数变为一个（某种意义上的）“不变值”：
 
 ```js
-var x = Object.freeze( [2] );
+var x = Object.freeze([2]);
 ```
 
 `Object.freeze(..)` 工具遍历一个对象/数组上的所有属性/下标并将它们标识为只读，于是它们就不能被重新赋值了。这实际上有些像使用 `const` 来声明属性！`Object.freeze(..)` 还会将属性标识为不可配置的，并且将对象/数组本身标识为不可扩展的（不能添加新的属性）。实质上，它使对象的顶层成为不可变的。
@@ -307,7 +307,7 @@ var x = Object.freeze( [2] );
 但只有顶层。要小心！
 
 ```js
-var x = Object.freeze( [ 2, 3, [4, 5] ] );
+var x = Object.freeze([2, 3, [4, 5]]);
 
 // 不允许：
 x[0] = 42;
@@ -318,16 +318,16 @@ x[2][0] = 42;
 
 `Object.freeze(..)` 提供了一种浅层的，幼稚的不可变性。如果你想要一个深层的不可变值，你就必须手动地遍历整个对象/数组结构并在每一个子对象/数组上使用 `Object.freeze(..)`。
 
-但是与使你稀里糊涂地认为你得到了一个不可变值 —— 其实不是 —— 的 `const` 相对比起来，`Object.freeze(..)` *确实* 给了你一个不可变值。
+但是与使你稀里糊涂地认为你得到了一个不可变值 —— 其实不是 —— 的 `const` 相对比起来，`Object.freeze(..)` _确实_ 给了你一个不可变值。
 
 回想一下之前防护的例子：
 
 ```js
-var arr = Object.freeze( [1,2,3] );
+var arr = Object.freeze([1, 2, 3]);
 
-foo( arr );
+foo(arr);
 
-console.log( arr[0] );          // 1
+console.log(arr[0]); // 1
 ```
 
 现在 `arr[0]` 相当可靠地是 `1`。
@@ -344,7 +344,7 @@ console.log( arr[0] );          // 1
 
 如果你有一个状态的改变在整个程序的生命周期中只发生一次（甚至几次），为了新的数组/对象而把旧的扔掉就几乎没什么可在乎的。我们所谈论的消耗是如此之小 —— 可能最多仅仅几微秒 —— 以至于不会对你应用程序的性能有实质上的影响。与你将节省下来的几分钟或几小时 —— 花在不得不追踪并修复因值的意外改变而引起的 bug —— 相比，这甚至没什么可争论的。
 
-那么同样，如果这样的操作将频繁发生，或者特别地发生在你应用程序的 *关键路径* 上，那么性能 —— 性能与内存两者! —— 就完全是一个需要关心的问题了。
+那么同样，如果这样的操作将频繁发生，或者特别地发生在你应用程序的 _关键路径_ 上，那么性能 —— 性能与内存两者! —— 就完全是一个需要关心的问题了。
 
 考虑一种特殊的数据结构，它像一个数组一样，但是你想在改变它时，使每一次改变都隐含地表现为好像得到了一个新的数组。在不实际每次创建一个新数组的情况下，你如何达成这个目标？这种特殊的数组数据结构能够存储原始值，然后跟踪每一次改变并将之作为前一个版本的增量。
 
@@ -359,41 +359,41 @@ console.log( arr[0] );          // 1
 想象一下这样使用这种理论上的特殊数组数据结构：
 
 ```js
-var state = specialArray( 4, 6, 1, 1 );
+var state = specialArray(4, 6, 1, 1);
 
-var newState = state.set( 4, 2 );
+var newState = state.set(4, 2);
 
-state === newState;                 // false
+state === newState; // false
 
-state.get( 2 );                     // 1
-state.get( 4 );                     // undefined
+state.get(2); // 1
+state.get(4); // undefined
 
-newState.get( 2 );                  // 1
-newState.get( 4 );                  // 2
+newState.get(2); // 1
+newState.get(4); // 2
 
-newState.slice( 2, 5 );             // [1,1,2]
+newState.slice(2, 5); // [1,1,2]
 ```
 
-数据结构 `specialArray(..)` 将会在内部追踪每一次改变操作（比如 `set(..)`），作为一个 *diff*，所以它不必仅为了向列表中添加值 `2` 而为原始值（`4`、`6`、`1`、和 `1`）重新分配内存。但重要的是，`state` 和 `newState` 指向了这个数组值的不同版本（或视图），所以 **值的不可变性的语义被保持了下来。**
+数据结构 `specialArray(..)` 将会在内部追踪每一次改变操作（比如 `set(..)`），作为一个 _diff_，所以它不必仅为了向列表中添加值 `2` 而为原始值（`4`、`6`、`1`、和 `1`）重新分配内存。但重要的是，`state` 和 `newState` 指向了这个数组值的不同版本（或视图），所以 **值的不可变性的语义被保持了下来。**
 
 发明你自己的性能优化数据结构是一种有趣的挑战。但从实用的角度讲，你可能应当使用一个在这方面已经做得很好的库。一个很棒的选项是 [Immutable.js](http://facebook.github.io/immutable-js)，它提供了各种数据结构，包括 `List`（类似数组）和 `Map`（类似对象）。
 
 考虑上面的 `specialArray` 例子，但是用 `Immutable.List`：
 
 ```js
-var state = Immutable.List.of( 4, 6, 1, 1 );
+var state = Immutable.List.of(4, 6, 1, 1);
 
-var newState = state.set( 4, 2 );
+var newState = state.set(4, 2);
 
-state === newState;                 // false
+state === newState; // false
 
-state.get( 2 );                     // 1
-state.get( 4 );                     // undefined
+state.get(2); // 1
+state.get(4); // undefined
 
-newState.get( 2 );                  // 1
-newState.get( 4 );                  // 2
+newState.get(2); // 1
+newState.get(4); // 2
 
-newState.toArray().slice( 2, 5 );   // [1,1,2]
+newState.toArray().slice(2, 5); // [1,1,2]
 ```
 
 像 Immutable.js 这样强大的库采用了非常精巧的性能优化方法。在没有这样的库的帮助下处理所有的细节以及罕见状况将十分困难。
@@ -408,9 +408,9 @@ newState.toArray().slice( 2, 5 );   // [1,1,2]
 
 ```js
 function updateLastLogin(user) {
-    var newUserRecord = Object.assign( {}, user );
-    newUserRecord.lastLogin = Date.now();
-    return newUserRecord;
+  var newUserRecord = Object.assign({}, user);
+  newUserRecord.lastLogin = Date.now();
+  return newUserRecord;
 }
 ```
 
@@ -418,8 +418,8 @@ function updateLastLogin(user) {
 
 ```js
 function updateLastLogin(user) {
-    user.lastLogin = Date.now();
-    return user;
+  user.lastLogin = Date.now();
+  return user;
 }
 ```
 
@@ -430,24 +430,24 @@ function updateLastLogin(user) {
 这种方式的一些很好的例子可以在 JS 数组的各种內建方法中看到，比如 `concat(..)` 和 `slice(..)`：
 
 ```js
-var arr = [1,2,3,4,5];
+var arr = [1, 2, 3, 4, 5];
 
-var arr2 = arr.concat( 6 );
+var arr2 = arr.concat(6);
 
-arr;                    // [1,2,3,4,5]
-arr2;                   // [1,2,3,4,5,6]
+arr; // [1,2,3,4,5]
+arr2; // [1,2,3,4,5,6]
 
-var arr3 = arr2.slice( 1 );
+var arr3 = arr2.slice(1);
 
-arr2;                   // [1,2,3,4,5,6]
-arr3;                   // [2,3,4,5,6]
+arr2; // [1,2,3,4,5,6]
+arr3; // [2,3,4,5,6]
 ```
 
 其他的一些将值视为不可变，并返回一个新数组而非修改的数组原型方法是：`map(..)` 和 `filter(..)`。`reduce(..)` / `reduceRight(..)` 工具也会避免修改值，虽然它们不会默认地返回一个新数组。
 
 不幸的是，由于一些历史原因，有好几个数组方法是不纯粹的修改器方法：`splice(..)`、`pop(..)`、`push(..)`、`shift(..)`、`unshift(..)`、`reverse(..)`、`sort(..)`、和 `fill(..)`。
 
-就像一些人主张的，这不应当被视为使用这些工具的 *禁令*。为了例如性能优化之类的原因，有时你会想要使用它们。但你绝不应该在一个对于你当前函数来说还不是本地值的数组使用这样的方法，以避免对代码稍远处的其他部分造成副作用。
+就像一些人主张的，这不应当被视为使用这些工具的 _禁令_。为了例如性能优化之类的原因，有时你会想要使用它们。但你绝不应该在一个对于你当前函数来说还不是本地值的数组使用这样的方法，以避免对代码稍远处的其他部分造成副作用。
 
 <a name="hiddenmutation"></a>
 
@@ -455,18 +455,18 @@ arr3;                   // [2,3,4,5,6]
 
 ```js
 function compose(...fns) {
-    return function composed(result){
-        // 拷贝函数的数组
-        var list = fns.slice();
+  return function composed(result) {
+    // 拷贝函数的数组
+    var list = fns.slice();
 
-        while (list.length > 0) {
-            // 从列表的最后取出一个函数
-            // 并执行它
-            result = list.pop()( result );
-        }
+    while (list.length > 0) {
+      // 从列表的最后取出一个函数
+      // 并执行它
+      result = list.pop()(result);
+    }
 
-        return result;
-    };
+    return result;
+  };
 }
 ```
 
@@ -476,27 +476,31 @@ function compose(...fns) {
 
 ```js
 function compose(...fns) {
-    return function composed(result){
-        while (fns.length > 0) {
-            // 从列表的最后取出一个函数
-            // 并执行它
-            result = fns.pop()( result );
-        }
+  return function composed(result) {
+    while (fns.length > 0) {
+      // 从列表的最后取出一个函数
+      // 并执行它
+      result = fns.pop()(result);
+    }
 
-        return result;
-    };
+    return result;
+  };
 }
 
-var f = compose( x => x / 3, x => x + 1, x => x * 2 );
+var f = compose(
+  (x) => x / 3,
+  (x) => x + 1,
+  (x) => x * 2
+);
 
-f( 4 );     // 3
+f(4); // 3
 
-f( 4 );     // 4 <-- 噢！
+f(4); // 4 <-- 噢！
 ```
 
 第二次使用 `f(..)` 的结果不正确，因为我们在第一次调用中改变了 `fns`，这影响了后续的所有使用。根据情景的不同，制造一个像 `list = fns.slice()` 这样的数组拷贝可能有必要也可能没必要。但我认为假定你需要最安全 —— 就算是仅仅为了可读性考量 —— 除非你能证明你不需要，而非其他的原因。
 
-严格遵守并总是将 *收到的值* 视为可变的，不管它们是还是不是。这种努力将会改进你代码的可读性与可信性。
+严格遵守并总是将 _收到的值_ 视为可变的，不管它们是还是不是。这种努力将会改进你代码的可读性与可信性。
 
 ## 总结
 

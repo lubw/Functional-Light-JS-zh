@@ -6,7 +6,7 @@
 
 <hr>
 
-*(本页的剩余部分故意被留作空白)*
+_(本页的剩余部分故意被留作空白)_
 
 <p>&nbsp;</p>
 <p>&nbsp;</p>
@@ -26,7 +26,7 @@
 
 很弱的玩笑，我知道。:)
 
-递归是那些大多数开发者都承认其非常强大，但同时也不喜欢使用的技术之一。在这种意义上，我将之与正则表达式归为同一范畴。强大，但令人糊涂，因此看起来 *不值得花那么多力气*。
+递归是那些大多数开发者都承认其非常强大，但同时也不喜欢使用的技术之一。在这种意义上，我将之与正则表达式归为同一范畴。强大，但令人糊涂，因此看起来 _不值得花那么多力气_。
 
 我是一个递归的狂热爱好者，而且你也可以是！不幸的是，许多递归的例子都关注于生成斐波那契数列这样不起眼儿的学术问题。如果你的程序真的需要这种数列 —— 让我们面对现实，这不是很常见！—— 你很可能忽视了大局。
 
@@ -38,14 +38,14 @@
 
 递归是一个函数调用它自己，而且这个调用也做同样的事情，这种循环一直持续到基准条件达成，然后所有的调用都被展开。
 
-**注意：** 如果你不能确保基准条件会 *最终* 达成，那么递归就会永远运行下去，并使你的程序崩溃或锁住你的程序；搞对基准条件十分重要！
+**注意：** 如果你不能确保基准条件会 _最终_ 达成，那么递归就会永远运行下去，并使你的程序崩溃或锁住你的程序；搞对基准条件十分重要！
 
 但是…… 这个定义的书面形式太过模糊。我们可以做得更好。考虑这个递归函数：
 
 ```js
 function foo(x) {
-    if (x < 5) return x;
-    return foo( x / 2 );
+  if (x < 5) return x;
+  return foo(x / 2);
 }
 ```
 
@@ -76,15 +76,15 @@ function foo(x) {
 另一个递归的例子：
 
 ```js
-function isPrime(num,divisor = 2){
-    if (num < 2 || (num > 2 && num % divisor == 0)) {
-        return false;
-    }
-    if (divisor <= Math.sqrt( num )) {
-        return isPrime( num, divisor + 1 );
-    }
+function isPrime(num, divisor = 2) {
+  if (num < 2 || (num > 2 && num % divisor == 0)) {
+    return false;
+  }
+  if (divisor <= Math.sqrt(num)) {
+    return isPrime(num, divisor + 1);
+  }
 
-    return true;
+  return true;
 }
 ```
 
@@ -105,8 +105,8 @@ fib( n ):
 
 ```js
 function fib(n) {
-    if (n <= 1) return n;
-    return fib( n - 2 ) + fib( n - 1 );
+  if (n <= 1) return n;
+  return fib(n - 2) + fib(n - 1);
 }
 ```
 
@@ -124,13 +124,13 @@ function fib(n) {
 
 ```js
 function isOdd(v) {
-    if (v === 0) return false;
-    return isEven( Math.abs( v ) - 1 );
+  if (v === 0) return false;
+  return isEven(Math.abs(v) - 1);
 }
 
 function isEven(v) {
-    if (v === 0) return true;
-    return isOdd( Math.abs( v ) - 1 );
+  if (v === 0) return true;
+  return isOdd(Math.abs(v) - 1);
 }
 ```
 
@@ -140,13 +140,13 @@ function isEven(v) {
 
 ```js
 function fib_(n) {
-    if (n == 1) return 1;
-    else return fib( n - 2 );
+  if (n == 1) return 1;
+  else return fib(n - 2);
 }
 
 function fib(n) {
-    if (n == 0) return 0;
-    else return fib( n - 1 ) + fib_( n );
+  if (n == 0) return 0;
+  else return fib(n - 1) + fib_(n);
 }
 ```
 
@@ -163,19 +163,19 @@ function fib(n) {
 简单的迭代算法可以很容易地表达为递归：
 
 ```js
-function sum(total,...nums) {
-    for (let num of nums) {
-        total = total + num;
-    }
+function sum(total, ...nums) {
+  for (let num of nums) {
+    total = total + num;
+  }
 
-    return total;
+  return total;
 }
 
 // vs
 
-function sum(num1,...nums) {
-    if (nums.length == 0) return num1;
-    return num1 + sum( ...nums );
+function sum(num1, ...nums) {
+  if (nums.length == 0) return num1;
+  return num1 + sum(...nums);
 }
 ```
 
@@ -191,17 +191,17 @@ function sum(num1,...nums) {
 
 ```js
 function maxEven(...nums) {
-    var maxNum = -Infinity;
+  var maxNum = -Infinity;
 
-    for (let num of nums) {
-        if (num % 2 == 0 && num > maxNum) {
-            maxNum = num;
-        }
+  for (let num of nums) {
+    if (num % 2 == 0 && num > maxNum) {
+      maxNum = num;
     }
+  }
 
-    if (maxNum !== -Infinity) {
-        return maxNum;
-    }
+  if (maxNum !== -Infinity) {
+    return maxNum;
+  }
 }
 ```
 
@@ -224,14 +224,10 @@ maxEven( 1, 10, 3, 2 ):
 要在 JS 中实现这种递归定义，一个方式是：
 
 ```js
-function maxEven(num1,...restNums) {
-    var maxRest = restNums.length > 0 ?
-            maxEven( ...restNums ) :
-            undefined;
+function maxEven(num1, ...restNums) {
+  var maxRest = restNums.length > 0 ? maxEven(...restNums) : undefined;
 
-    return (num1 % 2 != 0 || num1 < maxRest) ?
-        maxRest :
-        num1;
+  return num1 % 2 != 0 || num1 < maxRest ? maxRest : num1;
 }
 ```
 
@@ -256,7 +252,7 @@ maxEven( num1, ...restNums ):
 
 另外，我们使用了 `restNums.length > 0` 守护条件来强化这个概念，因为如果没有更多数字需要考虑了，那么自然的结果就是 `maxRest` 必定是 `undefined`。我们不必再花费任何额外的精力来推理这一部分。基准条件（没有更多数字要考虑了）是显而易见的。
 
-接下来，我们将注意力转移至对照 `maxRest` 来检查 `num1` —— 这个算法的主逻辑是如何判定两个数字中的哪一个是最大偶数。如果 `num1` 不是偶数（`num1 % 2 != 0`），或者它小于 `maxRest`，那么 `maxRest` *必须* 被 `return`，即使它是 `undefined`。否则，`num1` 就是答案。
+接下来，我们将注意力转移至对照 `maxRest` 来检查 `num1` —— 这个算法的主逻辑是如何判定两个数字中的哪一个是最大偶数。如果 `num1` 不是偶数（`num1 % 2 != 0`），或者它小于 `maxRest`，那么 `maxRest` _必须_ 被 `return`，即使它是 `undefined`。否则，`num1` 就是答案。
 
 我在制造的情景是，与指令式的方式相比，它使阅读一个实现时推理它变得更加直截了当，使我们分心的微小差别和噪音更少；它要比使用 `-Infinity` 的 `for` 循环版本 **声明性更强**。
 
@@ -277,13 +273,13 @@ depth( node ):
 
 ```js
 function depth(node) {
-    if (node) {
-        let depthLeft = depth( node.left );
-        let depthRight = depth( node.right );
-        return 1 + max( depthLeft, depthRight );
-    }
+  if (node) {
+    let depthLeft = depth(node.left);
+    let depthRight = depth(node.right);
+    return 1 + max(depthLeft, depthRight);
+  }
 
-    return 0;
+  return 0;
 }
 ```
 
@@ -297,43 +293,43 @@ function depth(node) {
 
 ```js
 function isOdd(v) {
-    if (v === 0) return false;
-    return isEven( Math.abs( v ) - 1 );
+  if (v === 0) return false;
+  return isEven(Math.abs(v) - 1);
 }
 
 function isEven(v) {
-    if (v === 0) return true;
-    return isOdd( Math.abs( v ) - 1 );
+  if (v === 0) return true;
+  return isOdd(Math.abs(v) - 1);
 }
 ```
 
 在大多数浏览器中，如果你试着运行这段代码你就会得到一个错误：
 
 ```js
-isOdd( 33333 );         // RangeError: Maximum call stack size exceeded
+isOdd(33333); // RangeError: Maximum call stack size exceeded
 ```
 
 发生了什么错误？引擎抛出这个错误是因为它想防止你的程序耗尽系统内存。为了解释这一切，我们需要看看当函数调用发生时，JS 引擎在背后发生了什么。
 
 每一个函数调用都会留出一小块称为栈帧（stack frame）的内存。栈帧中持有一些特殊的重要信息：在一个函数中当前正在处理的语句的状态，包括所有变量中的值。这些信息需要被存储在内存（栈帧）中的原因是函数可能会调用另一个函数，这会暂停当前函数的运行。当另一个函数结束时，引擎需要从当前函数正好被暂停时的状态继续它的运行。
 
-当第二个函数调用开始时，它也需要一个栈帧，从而将栈帧的数量增加到 2。如果这个函数再调用另一个函数，我们就需要第三个栈帧。以此类推。“栈” 这个词说的是这样的概念：每次一个函数被前一个函数调用时，下一个帧会被 *堆积到* 栈的顶部。当一个函数调用完成时，它的帧会从栈中弹出。
+当第二个函数调用开始时，它也需要一个栈帧，从而将栈帧的数量增加到 2。如果这个函数再调用另一个函数，我们就需要第三个栈帧。以此类推。“栈” 这个词说的是这样的概念：每次一个函数被前一个函数调用时，下一个帧会被 _堆积到_ 栈的顶部。当一个函数调用完成时，它的帧会从栈中弹出。
 
 考虑这段程序：
 
 ```js
 function foo() {
-    var z = "foo!";
+  var z = "foo!";
 }
 
 function bar() {
-    var y = "bar!";
-    foo();
+  var y = "bar!";
+  foo();
 }
 
 function baz() {
-    var x = "baz!";
-    bar();
+  var x = "baz!";
+  bar();
 }
 
 baz();
@@ -351,7 +347,7 @@ baz();
 
 成对的 `isOdd(..)` / `isEven(..)` 抛出一个 `RangeError` 是因为引擎遇到了一个被随意设置的限制，从而认为调用栈增长的太多而需要被停止。这个限制不是基于实际内存水平接近于零，而是由引擎进行的预测：如果放任这种程序运行下去，内存就会耗尽了。知道或证明一个程序最终会停止是不可能的，所以引擎不得不进行一次有依据的猜测。
 
-这种限制是依赖于实现的。语言规范中对此没有任何说明，所以它不是 *必须* 的。但在实际中所有的 JS 引擎都确实有一个限制，因为不作限制将会制造出不稳定的设备，它们很容易受到烂代码或恶意代码的攻击。在每一个不同设备环境中的每一个引擎都会强制一个它自己的限制，所以没有办法可以预测或保证我们可以在函数调用栈上走多远。
+这种限制是依赖于实现的。语言规范中对此没有任何说明，所以它不是 _必须_ 的。但在实际中所有的 JS 引擎都确实有一个限制，因为不作限制将会制造出不稳定的设备，它们很容易受到烂代码或恶意代码的攻击。在每一个不同设备环境中的每一个引擎都会强制一个它自己的限制，所以没有办法可以预测或保证我们可以在函数调用栈上走多远。
 
 这种限制对我们开发者的意义是，在解决关于大型数据集合的问题时递归的用途有一种应用的局限性。事实上，我认为这种局限性才是使递归在开发者工具箱中沦为二等公民的最大原因。令人遗憾的是，递归是一种事后思考而不是一种主要技术。
 
@@ -359,7 +355,7 @@ baz();
 
 递归的出现远早于 JS，这些内存的限制也是。早在 1960 年代，开发者们就因想使用递归而遭遇了设备内存限制的困难，而他们强大的计算机的内存比我们今天的手表还要小得多。
 
-幸运的是，在那些早年间的日子里产生的一种强大的远见依然给出了希望。这种技术称为 *尾部调用（tail calls）*。
+幸运的是，在那些早年间的日子里产生的一种强大的远见依然给出了希望。这种技术称为 _尾部调用（tail calls）_。
 
 它的想法是，如果从函数 `baz()` 到函数 `bar()` 的调用发生在函数 `baz()` 执行的最末尾 —— 这称为一个尾部调用 —— 那么 `baz()` 的栈帧就不再需要了。这意味着内存要么被回收，要么或者更好地，简单地被重用于函数 `bar()` 的执行。图形化一下的话：
 
@@ -379,7 +375,7 @@ baz();
 
 首先，在 JavaScript 中 PTC 要求 strict 模式。你应当已经在使用 strict 模式了，但如果你没有，这就是另一个你应当已经开始使用 strict 模式的理由。难道我没提到过你应当已经在使用 strict 模式了吗！？
 
-第二，一个 *正确* 尾部调用看起来像这样：
+第二，一个 _正确_ 尾部调用看起来像这样：
 
 ```js
 return foo( .. );
@@ -387,7 +383,7 @@ return foo( .. );
 
 换句话说，函数调用是这个函数最后一件需要执行的事情，而无论它返回什么值都要被明确地 `return`。这样，JS 就可以绝对地保证不再需要当前的栈帧了。
 
-这些 *不是* PTC：
+这些 _不是_ PTC：
 
 ```js
 foo();
@@ -403,11 +399,11 @@ return x;
 return 1 + foo( .. );
 ```
 
-**注意：** 一个 JS 引擎，或者一个智能的转译器，*可能* 会做一些代码识别工作来认识到 `var x = foo(); return x;` 实质上与 `return foo();` 是一样的，这将使它成为合法的 PTC。但语言规范中对此没有要求。
+**注意：** 一个 JS 引擎，或者一个智能的转译器，_可能_ 会做一些代码识别工作来认识到 `var x = foo(); return x;` 实质上与 `return foo();` 是一样的，这将使它成为合法的 PTC。但语言规范中对此没有要求。
 
-`1 +` 的那一部分绝对会在 `foo(..)` 完成 *之后* 处理，所以栈帧不得不保留。
+`1 +` 的那一部分绝对会在 `foo(..)` 完成 _之后_ 处理，所以栈帧不得不保留。
 
-然而，这 *是* PTC：
+然而，这 _是_ PTC：
 
 ```js
 return x ? foo( .. ) : bar( .. );
@@ -432,21 +428,21 @@ return x ? foo( .. ) : bar( .. );
 让我们回忆一下先前的求和的例子：
 
 ```js
-function sum(num1,...nums) {
-    if (nums.length == 0) return num1;
-    return num1 + sum( ...nums );
+function sum(num1, ...nums) {
+  if (nums.length == 0) return num1;
+  return num1 + sum(...nums);
 }
 ```
 
 这不是 PTC 形式，因为在对 `sum(...nums)` 的递归调用完成之后，变量 `total` 被加到了它的结果上。所以，栈帧必须被保留，以便在其余的递归处理运行时追踪这个 `total` 部分结果。
 
-这种重构策略的关键特征是，我们可以通过 *现在* 就做加法而非 *以后* 再做，来移除我们对栈的依赖，然后将这个部分结果作为参数向下传递给递归调用。换句话说，与其将 `total` 保留在当前函数的栈帧中，不如将它推到下一个递归调用的栈帧中；这释放了当前的栈帧，使得它可以被移除/重用。
+这种重构策略的关键特征是，我们可以通过 _现在_ 就做加法而非 _以后_ 再做，来移除我们对栈的依赖，然后将这个部分结果作为参数向下传递给递归调用。换句话说，与其将 `total` 保留在当前函数的栈帧中，不如将它推到下一个递归调用的栈帧中；这释放了当前的栈帧，使得它可以被移除/重用。
 
 为了开始，我们可以改变 `sum(..)` 函数的签名，使它拥有一个新的作为部分结果的第一参数：
 
 ```js
-function sum(result,num1,...nums) {
-    // ..
+function sum(result, num1, ...nums) {
+  // ..
 }
 ```
 
@@ -455,10 +451,10 @@ function sum(result,num1,...nums) {
 ```js
 "use strict";
 
-function sum(result,num1,...nums) {
-    result = result + num1;
-    if (nums.length == 0) return result;
-    return sum( result, ...nums );
+function sum(result, num1, ...nums) {
+  result = result + num1;
+  if (nums.length == 0) return result;
+  return sum(result, ...nums);
 }
 ```
 
@@ -467,7 +463,7 @@ function sum(result,num1,...nums) {
 但缺点是现在我们改变了函数的签名而让它使用起来很奇怪。实质上调用方不得不将 `0` 在其余他希望求和的数字之前作为第一个参数传递。
 
 ```js
-sum( /*initialResult=*/0, 3, 1, 17, 94, 8 );        // 123
+sum(/*initialResult=*/ 0, 3, 1, 17, 94, 8); // 123
 ```
 
 这很不幸。
@@ -477,17 +473,17 @@ sum( /*initialResult=*/0, 3, 1, 17, 94, 8 );        // 123
 ```js
 "use strict";
 
-function sumRec(result,num1,...nums) {
-    result = result + num1;
-    if (nums.length == 0) return result;
-    return sumRec( result, ...nums );
+function sumRec(result, num1, ...nums) {
+  result = result + num1;
+  if (nums.length == 0) return result;
+  return sumRec(result, ...nums);
 }
 
 function sum(...nums) {
-    return sumRec( /*initialResult=*/0, ...nums );
+  return sumRec(/*initialResult=*/ 0, ...nums);
 }
 
-sum( 3, 1, 17, 94, 8 );                             // 123
+sum(3, 1, 17, 94, 8); // 123
 ```
 
 这好多了。但依然不幸的是我们现在创建了多个函数而不是一个。有时候你会看到一些开发者将递归函数作为一个内部函数“藏”起来，就像这样：
@@ -496,16 +492,16 @@ sum( 3, 1, 17, 94, 8 );                             // 123
 "use strict";
 
 function sum(...nums) {
-    return sumRec( /*initialResult=*/0, ...nums );
+  return sumRec(/*initialResult=*/ 0, ...nums);
 
-    function sumRec(result,num1,...nums) {
-        result = result + num1;
-        if (nums.length == 0) return result;
-        return sumRec( result, ...nums );
-    }
+  function sumRec(result, num1, ...nums) {
+    result = result + num1;
+    if (nums.length == 0) return result;
+    return sumRec(result, ...nums);
+  }
 }
 
-sum( 3, 1, 17, 94, 8 );                             // 123
+sum(3, 1, 17, 94, 8); // 123
 ```
 
 这里的缺陷是我们将在每一次 `sum(..)` 被调用时重新创建那个内部的 `sumRec(..)` 函数。所以，我们可以回到它们是并排存在的函数时的状态，但把它们藏在一个 IIFE 中，让后仅仅暴露我们想要的哪一个：
@@ -513,21 +509,19 @@ sum( 3, 1, 17, 94, 8 );                             // 123
 ```js
 "use strict";
 
-var sum = (function IIFE(){
+var sum = (function IIFE() {
+  return function sum(...nums) {
+    return sumRec(/*initialResult=*/ 0, ...nums);
+  };
 
-    return function sum(...nums) {
-        return sumRec( /*initialResult=*/0, ...nums );
-    }
-
-    function sumRec(result,num1,...nums) {
-        result = result + num1;
-        if (nums.length == 0) return result;
-        return sumRec( result, ...nums );
-    }
-
+  function sumRec(result, num1, ...nums) {
+    result = result + num1;
+    if (nums.length == 0) return result;
+    return sumRec(result, ...nums);
+  }
 })();
 
-sum( 3, 1, 17, 94, 8 );                             // 123
+sum(3, 1, 17, 94, 8); // 123
 ```
 
 好的，我们得到了 PTC 而且我们得到了不要求调用方知道我们实现细节的漂亮干净的 `sum(..)` 签名。耶！
@@ -539,13 +533,13 @@ sum( 3, 1, 17, 94, 8 );                             // 123
 ```js
 "use strict";
 
-function sum(result,num1,...nums) {
-    result = result + num1;
-    if (nums.length == 0) return result;
-    return sum( result, ...nums );
+function sum(result, num1, ...nums) {
+  result = result + num1;
+  if (nums.length == 0) return result;
+  return sum(result, ...nums);
 }
 
-sum( /*initialResult=*/0, 3, 1, 17, 94, 8 );        // 123
+sum(/*initialResult=*/ 0, 3, 1, 17, 94, 8); // 123
 ```
 
 你可能观察到了，`result` 就像 `num1` 一样是一个数字，这意味着我们总是可以将数列中的第一个数字视为我们运行中的和；这甚至包括第一个调用。我们所需的一切就是重命名这些参数使这一点更清晰：
@@ -553,13 +547,13 @@ sum( /*initialResult=*/0, 3, 1, 17, 94, 8 );        // 123
 ```js
 "use strict";
 
-function sum(num1,num2,...nums) {
-    num1 = num1 + num2;
-    if (nums.length == 0) return num1;
-    return sum( num1, ...nums );
+function sum(num1, num2, ...nums) {
+  num1 = num1 + num2;
+  if (nums.length == 0) return num1;
+  return sum(num1, ...nums);
 }
 
-sum( 3, 1, 17, 94, 8 );                             // 123
+sum(3, 1, 17, 94, 8); // 123
 ```
 
 赞。这好多了，不是吗！？我认为这种模式在声明性/合理性与性能之间取得了一个良好的平衡。
@@ -580,15 +574,15 @@ sum( 3, 1, 17, 94, 8 );                             // 123
 ```js
 "use strict";
 
-function maxEven(num1,num2,...nums) {
-    num1 =
-        (num1 % 2 == 0 && !(maxEven( num2 ) > num1)) ?
-            num1 :
-            (num2 % 2 == 0 ? num2 : undefined);
+function maxEven(num1, num2, ...nums) {
+  num1 =
+    num1 % 2 == 0 && !(maxEven(num2) > num1)
+      ? num1
+      : num2 % 2 == 0
+      ? num2
+      : undefined;
 
-    return nums.length == 0 ?
-        num1 :
-        maxEven( num1, ...nums )
+  return nums.length == 0 ? num1 : maxEven(num1, ...nums);
 }
 ```
 
@@ -600,7 +594,7 @@ function maxEven(num1,num2,...nums) {
 
 ### 延续传递风格（CPS）
 
-在 JavaScript 中，*延续（continuation）* 一词经常用于表示一个函数回调，它指定了一个特定函数完成其工作之后要执行的后续步骤。每个函数接收另一个函数在它的末尾执行，这种组织代码的方式称为延续传递风格（Continuation Passing Style —— CPS）。
+在 JavaScript 中，_延续（continuation）_ 一词经常用于表示一个函数回调，它指定了一个特定函数完成其工作之后要执行的后续步骤。每个函数接收另一个函数在它的末尾执行，这种组织代码的方式称为延续传递风格（Continuation Passing Style —— CPS）。
 
 有些形式的递归实际上不能被重构为纯粹的 PTC，特别是多重递归。回忆一下早先的 `fib(..)` 函数，以及我们衍生出来的相互递归形式。在这两种情况中存在多重递归调用，这实质上抵消了 PTC 内存优化。
 
@@ -611,15 +605,9 @@ function maxEven(num1,num2,...nums) {
 ```js
 "use strict";
 
-function fib(n,cont = identity) {
-    if (n <= 1) return cont( n );
-    return fib(
-        n - 2,
-        n2 => fib(
-            n - 1,
-            n1 => cont( n2 + n1 )
-        )
-    );
+function fib(n, cont = identity) {
+  if (n <= 1) return cont(n);
+  return fib(n - 2, (n2) => fib(n - 1, (n1) => cont(n2 + n1)));
 }
 ```
 
@@ -647,15 +635,15 @@ CPS 创建延续并传递它们，另一种减轻内存压力的技术称为蹦�
 
 ```js
 function trampoline(fn) {
-    return function trampolined(...args) {
-        var result = fn( ...args );
+  return function trampolined(...args) {
+    var result = fn(...args);
 
-        while (typeof result == "function") {
-            result = result();
-        }
+    while (typeof result == "function") {
+      result = result();
+    }
 
-        return result;
-    };
+    return result;
+  };
 }
 ```
 
@@ -664,20 +652,18 @@ function trampoline(fn) {
 因为每个延续都需要返回另一个延续，我们很可能需要使用一个之前的技巧：将结果的一部分作为参数向前传递。这是我们如何在早先数列求和的例子中使用这个工具：
 
 ```js
-var sum = trampoline(
-    function sum(num1,num2,...nums) {
-        num1 = num1 + num2;
-        if (nums.length == 0) return num1;
-        return () => sum( num1, ...nums );
-    }
-);
+var sum = trampoline(function sum(num1, num2, ...nums) {
+  num1 = num1 + num2;
+  if (nums.length == 0) return num1;
+  return () => sum(num1, ...nums);
+});
 
 var xs = [];
-for (let i=0; i<20000; i++) {
-    xs.push( i );
+for (let i = 0; i < 20000; i++) {
+  xs.push(i);
 }
 
-sum( ...xs );                   // 199990000
+sum(...xs); // 199990000
 ```
 
 蹦床的缺点是它要求你将你的递归函数包装在蹦床的驱动函数中；另外，就像 CPS，每个延续都会创建闭包。然而，与 CPS 不同的是，每一个延续函数都立即被执行并完成，所以虽然要解决的问题的栈深度耗尽了，引擎也不必累积增长的闭包内存。
@@ -688,7 +674,7 @@ sum( ...xs );                   // 199990000
 
 递归就是一个函数递归地调用它自己。哼。一个递归的递归定义。明白了！？
 
-直接递归是一个函数至少发起对自己的调用一次，而这次调用持续地分发给自己直到满足基准条件。多重递归（比如二元递归）是一个函数调用它自己多次。相互递归是当两个或更多函数通过 *互相地* 调用对方递归地循环。
+直接递归是一个函数至少发起对自己的调用一次，而这次调用持续地分发给自己直到满足基准条件。多重递归（比如二元递归）是一个函数调用它自己多次。相互递归是当两个或更多函数通过 _互相地_ 调用对方递归地循环。
 
 递归的好处是它更具声明性而因此通常可读性更强。缺点通常是性能，而在内存上受到的制约要比执行速度更甚。
 

@@ -17,77 +17,81 @@
 让我们使用一段代码改造前后的快照来简要地展示一下 “轻量函数式 JavaScript” 的概念。考虑如下代码：
 
 ```js
-var numbers = [4,10,0,27,42,17,15,-6,58];
+var numbers = [4, 10, 0, 27, 42, 17, 15, -6, 58];
 var faves = [];
 var magicNumber = 0;
 
 pickFavoriteNumbers();
 calculateMagicNumber();
-outputMsg();                // The magic number is: 42
+outputMsg(); // The magic number is: 42
 
 // ***************
 
 function calculateMagicNumber() {
-    for (let fave of faves) {
-        magicNumber = magicNumber + fave;
-    }
+  for (let fave of faves) {
+    magicNumber = magicNumber + fave;
+  }
 }
 
 function pickFavoriteNumbers() {
-    for (let num of numbers) {
-        if (num >= 10 && num <= 20) {
-            faves.push( num );
-        }
+  for (let num of numbers) {
+    if (num >= 10 && num <= 20) {
+      faves.push(num);
     }
+  }
 }
 
 function outputMsg() {
-    var msg = `The magic number is: ${magicNumber}`;
-    console.log( msg );
+  var msg = `The magic number is: ${magicNumber}`;
+  console.log(msg);
 }
 ```
 
 现在考虑一下这种非常不同的风格，它得到了完全一样的结果：
 
 ```js
-var sumOnlyFavorites = FP.compose( [
-    FP.filterReducer( FP.gte( 10 ) ),
-    FP.filterReducer( FP.lte( 20 ) )
-] )( sum );
+var sumOnlyFavorites = FP.compose([
+  FP.filterReducer(FP.gte(10)),
+  FP.filterReducer(FP.lte(20)),
+])(sum);
 
-var printMagicNumber = FP.pipe( [
-    FP.reduce( sumOnlyFavorites, 0 ),
-    constructMsg,
-    console.log
-] );
+var printMagicNumber = FP.pipe([
+  FP.reduce(sumOnlyFavorites, 0),
+  constructMsg,
+  console.log,
+]);
 
-var numbers = [4,10,0,27,42,17,15,-6,58];
+var numbers = [4, 10, 0, 27, 42, 17, 15, -6, 58];
 
-printMagicNumber( numbers );        // The magic number is: 42
+printMagicNumber(numbers); // The magic number is: 42
 
 // ***************
 
-function sum(x,y) { return x + y; }
-function constructMsg(v) { return `The magic number is: ${v}`; }
+function sum(x, y) {
+  return x + y;
+}
+function constructMsg(v) {
+  return `The magic number is: ${v}`;
+}
 ```
 
-一旦你理解了 FP 和轻量函数式，你可能会这样 *阅读* 并思考第二个代码段：
+一旦你理解了 FP 和轻量函数式，你可能会这样 _阅读_ 并思考第二个代码段：
 
 > 我们首先创建了一个称为 `sumOnlyFavorites(..)` 的函数，它是其他三个函数的组合。我们组合了两个过滤器，一个检查一个值是否大于等于 10，一个检查一个值是否小于等于 20 。然后我们在 transducer 组合中引入了 `sum(..)` 递减器。`sumOnlyFavorites(..)` 函数的结果是一个递减器，它检查一个值是否同时通过了两个过滤器，如果是，就将这个值加到累计值上。
 >
-> 然后我们制造了另一个称为 `printMagicNumber(..)` 的函数，它首先使用我们刚刚定义的 `sumOnlyFavorites(..)` 递减器将一个数字的列表递减为一个仅由通过了 *favorite* 检查的数字构成的和。然后 `printMagicNumber(..)` 将这个最终的和输送给 `constructMsg(..)`，它创建一个最终流入 `console.log(..)` 的字符串值。
+> 然后我们制造了另一个称为 `printMagicNumber(..)` 的函数，它首先使用我们刚刚定义的 `sumOnlyFavorites(..)` 递减器将一个数字的列表递减为一个仅由通过了 _favorite_ 检查的数字构成的和。然后 `printMagicNumber(..)` 将这个最终的和输送给 `constructMsg(..)`，它创建一个最终流入 `console.log(..)` 的字符串值。
 
-目前，所有这些向 FP 开发者进行的 *讲述* 方式在你看来非常陌生。这本书将帮助你学会用相同的推理方式进行 *讲述*，使它对你来说像其他任何代码一样易读，甚至更容易读懂！
+目前，所有这些向 FP 开发者进行的 _讲述_ 方式在你看来非常陌生。这本书将帮助你学会用相同的推理方式进行 _讲述_，使它对你来说像其他任何代码一样易读，甚至更容易读懂！
 
 关于这段代码比较的其他几个注意点：
 
-* 对于许多读者来说，与后一个代码段相比前一个让人感觉更舒服/易读/易维护。如果这正是你的情况，完全没问题，你正处于正确的位置上。我敢说如果你坚持读完整本书，并实践了我们讨论的每一个话题，那么第二个代码段最终将会变得自然得多，也许甚至是首选！
+- 对于许多读者来说，与后一个代码段相比前一个让人感觉更舒服/易读/易维护。如果这正是你的情况，完全没问题，你正处于正确的位置上。我敢说如果你坚持读完整本书，并实践了我们讨论的每一个话题，那么第二个代码段最终将会变得自然得多，也许甚至是首选！
 
-* 你做过的东西可能与上面两个代码段有巨大不同或完全不同。那也没问题，这本书不会强制灌输你应当用一种特定的方式做事情。它的目标是展示各种模式的优点和缺点，使你有能力做出决断。当这本书结束的时候，你处理事情的方式可能有点儿比现在更接近于第二个代码段。
+- 你做过的东西可能与上面两个代码段有巨大不同或完全不同。那也没问题，这本书不会强制灌输你应当用一种特定的方式做事情。它的目标是展示各种模式的优点和缺点，使你有能力做出决断。当这本书结束的时候，你处理事情的方式可能有点儿比现在更接近于第二个代码段。
 
-* 你也可能已经是一位老练的 FP 开发者，正快速地浏览着这本书来看看有没有有用的，值得你读的东西。第二个代码段当然有一些你十分熟悉的东西。但我也打赌你会有好几次这么想：“嗯……，我不会 *这样* 做……”。这没关系，而且完全是合理的。
+- 你也可能已经是一位老练的 FP 开发者，正快速地浏览着这本书来看看有没有有用的，值得你读的东西。第二个代码段当然有一些你十分熟悉的东西。但我也打赌你会有好几次这么想：“嗯……，我不会 _这样_ 做……”。这没关系，而且完全是合理的。
 
-    这不是一本传统的，经典的 FP 书籍。我们的做法有时候看起来相当异端。我们是在 FP 带来的无法否认的好处，与不必解决一堆吓人的数学/符号/术语就能建造能工作的、可维护的 JS 之间寻找一种实用的平衡。这不是 *你的* 那种 FP，这是 “轻量函数式 JavaScript”。
+  这不是一本传统的，经典的 FP 书籍。我们的做法有时候看起来相当异端。我们是在 FP 带来的无法否认的好处，与不必解决一堆吓人的数学/符号/术语就能建造能工作的、可维护的 JS 之间寻找一种实用的平衡。这不是 _你的_ 那种 FP，这是 “轻量函数式 JavaScript”。
 
 无论你出于什么原因在读这本书，欢迎你！
 
@@ -95,9 +99,9 @@ function constructMsg(v) { return `The magic number is: ${v}`; }
 
 作为一个（使用 JavaScript）软件开发的教师，我做每一件事都有一个非常简单的前提作为某种基础：你不理解的代码是不能信任的代码。反之亦然，你不能信任的代码是你不能理解的代码。进一步讲，如果你不能信任或理解你自己的代码，那么对于你写的代码能够完成目标任务这件事来说，你就没有任何自信可言。你基本上是在一边祈祷一边运行程序。
 
-我说的信任是什么意思？我的意思是你可以通过阅读一段代码，不是仅靠运行它，来验证这段代码 *将会* 做什么；而非仅依赖于它 *应当* 做什么。也许更经常的是，我们倾向于通过运行测试套件来验证我们程序的正确性。我不是说测试不好，但我确实认为我们应当有这样的追求：能够对我们的代码有足够的理解，以至于在测试套件运行前我们就知道它能够通过。
+我说的信任是什么意思？我的意思是你可以通过阅读一段代码，不是仅靠运行它，来验证这段代码 _将会_ 做什么；而非仅依赖于它 _应当_ 做什么。也许更经常的是，我们倾向于通过运行测试套件来验证我们程序的正确性。我不是说测试不好，但我确实认为我们应当有这样的追求：能够对我们的代码有足够的理解，以至于在测试套件运行前我们就知道它能够通过。
 
-仅仅通过阅读我们的程序就能对它建立起强大的自信 —— 构成 FP 基础的那些技术就是根据这样的思维模式设计而来的。理解 FP 的人，以及在他们的程序中严于律己、孜孜不倦地使用 FP 的人，将会编写出他们 *和其他人* 能够阅读并验证的代码，他们的程序将会做他们想做的事。
+仅仅通过阅读我们的程序就能对它建立起强大的自信 —— 构成 FP 基础的那些技术就是根据这样的思维模式设计而来的。理解 FP 的人，以及在他们的程序中严于律己、孜孜不倦地使用 FP 的人，将会编写出他们 _和其他人_ 能够阅读并验证的代码，他们的程序将会做他们想做的事。
 
 在我们使用避免或最小化 bug 源头的技术时，信心也会随之增长。这也许是 FP 最大的卖点之一：FP 程序通常 bug 更少，而且那些确实存在的 bug 通常会出现在更加明显的地方，使得它们更容易被找到和修复。FP 代码的抗 bug 性更强 —— 但它当然不是 bug 免疫的。
 
@@ -113,13 +117,13 @@ function constructMsg(v) { return `The magic number is: ${v}`; }
 
 你可能有这样的经验，你在“编码”上花费的大把的时间其实只是在阅读既存的代码。我们之中很少有人有特权能够把全部的或大部分时间都用来敲新代码，而从来不用对付其他人（或者我们过去自己）写过的代码。
 
-初步估计，开发者们花在维护代码上的时间有70%都是用来阅读并理解它的。真让人瞠目结舌。70%。难怪全球程序员每天的平均代码量只有10行。我们一天花费7小时只是阅读代码，来搞清楚那10行应该放在什么地方！
+初步估计，开发者们花在维护代码上的时间有 70%都是用来阅读并理解它的。真让人瞠目结舌。70%。难怪全球程序员每天的平均代码量只有 10 行。我们一天花费 7 小时只是阅读代码，来搞清楚那 10 行应该放在什么地方！
 
 我们应当更多地关注代码的可读性。顺带一提的是，可读性不是减少字母数量。对可读性影响最大的实际上是亲和度。<a href="#user-content-footnote-1"><sup>1</sup></a>
 
 如果我们将要花更多的时间来关心如何使我们的代码变得更易读和易理解，那么 FP 就是我们努力的中心。FP 的各种原理十分成熟，经过深刻的研究和检验，而且是可以通过证明来验证的。花时间去学习并利用这些 FP 原理将最终使你的代码能够轻而易举地被你自己和其他人所辨识和熟悉。代码亲和度的提高，以及辨识度带来的好处，将会改进代码的可读性。
 
-比如，一旦你学会了 `map(..)` 所做的事情，当你在任何程序中看到它时，你就可以几乎是立即发现并理解它。但你每次遇到 `for` 循环时，你就不得不阅读整个循环来搞懂它。`for` 循环的语法可能令人倍感亲切，但它所做的实质可不是这样；它不得不每次都被 *读* 一遍。
+比如，一旦你学会了 `map(..)` 所做的事情，当你在任何程序中看到它时，你就可以几乎是立即发现并理解它。但你每次遇到 `for` 循环时，你就不得不阅读整个循环来搞懂它。`for` 循环的语法可能令人倍感亲切，但它所做的实质可不是这样；它不得不每次都被 _读_ 一遍。
 
 通过使更多的代码容易辨识，让我们在搞清楚代码在做什么这件事上花的时间更少，使我们的精力被解放出来去思考更高层的程序逻辑；无论如何，这是需要我们最多注意力的重要事务。
 
@@ -135,13 +139,13 @@ FP（至少，刨去所有使它魅力骤减的术语）是编写高可读性代
 
 随着你对这本书的学习，你可能会发现自己经历着相似的过程。但是放心，如果你坚持下去，曲线会转而向上延伸！
 
-*指令式* 描述了大多数我们可能已经自然编写的代码；它的焦点在于精确地指示计算机 *如何* 做某些事情。声明式代码 —— 我们将要学习编写、遵循 FP 原理的那一种 —— 更多地关注于描述结果是 *什么*。
+_指令式_ 描述了大多数我们可能已经自然编写的代码；它的焦点在于精确地指示计算机 _如何_ 做某些事情。声明式代码 —— 我们将要学习编写、遵循 FP 原理的那一种 —— 更多地关注于描述结果是 _什么_。
 
 让我们回忆一下本章早先出现的两个代码段。
 
-第一个代码段是指令式的，几乎全部都是关注于 *如何* 完成任务；它堆满了 `if` 语句、`for` 循环、临时变量、再赋值、改变值、带有副作用的函数调用，以及函数之间隐含的数据流。你当然 *可以* 跟踪它的逻辑来找出那些数字是如何流动并变化为最终状态的，但它一点儿也不清晰和直接。
+第一个代码段是指令式的，几乎全部都是关注于 _如何_ 完成任务；它堆满了 `if` 语句、`for` 循环、临时变量、再赋值、改变值、带有副作用的函数调用，以及函数之间隐含的数据流。你当然 _可以_ 跟踪它的逻辑来找出那些数字是如何流动并变化为最终状态的，但它一点儿也不清晰和直接。
 
-第二个代码段更具描述性；它避开了大多数上述指令式技术。注意，它没有明确的条件表达式、循环、副作用、再赋值，或改变值；取而代之的是，它利用了众所周知的（当然，是在 FP 世界中！）、可靠的模式，比如：过滤，递减，transducing，以及组合。关注点从底层的 *如何* 上升到了更高层的结果是 *什么*。
+第二个代码段更具描述性；它避开了大多数上述指令式技术。注意，它没有明确的条件表达式、循环、副作用、再赋值，或改变值；取而代之的是，它利用了众所周知的（当然，是在 FP 世界中！）、可靠的模式，比如：过滤，递减，transducing，以及组合。关注点从底层的 _如何_ 上升到了更高层的结果是 _什么_。
 
 与胡乱地使用一个 `if` 语句来检测一个数字不同的是，我们将这个任务委托给了一个众所周知的 FP 工具 `gte(..)`（大于等于），然后将注意力集中于更重要的事情上 —— 将这个过滤器与另一个过滤器以及一个求和函数相组合。
 
@@ -192,7 +196,7 @@ YAGNI 挑战我们这样的想法，以让我们记住：即便在某种情况�
 
 把这种思想应用在函数式编程上，我会给出这样的劝诫：在这本书中会讨论相当多的有趣和迷人的模式，但是仅仅因为你发现某些模式用起来激动人心，并不意味着在你代码的特定部分中使用它们是恰当的。
 
-这就是我与许多更正规的 FP 人士之间的不同之处：仅仅因为你 *能* FP 某些东西，不意味着你 *应当* FP 它。另外，有许多方法划分一个问题，而且就算你学过一个更精巧的方式，对可维护性与扩展性更加“适应未来”，但这一点上一个更简单的 FP 模式可能就绰绰有余了。
+这就是我与许多更正规的 FP 人士之间的不同之处：仅仅因为你 _能_ FP 某些东西，不意味着你 _应当_ FP 它。另外，有许多方法划分一个问题，而且就算你学过一个更精巧的方式，对可维护性与扩展性更加“适应未来”，但这一点上一个更简单的 FP 模式可能就绰绰有余了。
 
 一般说来，我推荐在你的代码中寻找平衡，并在你熟练掌握 FP 的概念时保守地应用它。在决定某种模式或抽象是否能够提高一部分代码的可读性，还是它只是引入了更多（还）不需要的聪明的复杂性时，默认选择 YANGI 原则。
 
@@ -214,23 +218,23 @@ YAGNI 挑战我们这样的想法，以让我们记住：即便在某种情况�
 
 一些你绝对应该读的 FP/JavaScript 书籍：
 
-* [Professor Frisby's Mostly Adequate Guide to Functional Programming](https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch1.html) by [Brian Lonsdorf](https://twitter.com/drboolean)
-* [JavaScript Allongé](https://leanpub.com/javascript-allonge) by [Reg Braithwaite](https://twitter.com/raganwald)
-* [Functional JavaScript](http://shop.oreilly.com/product/0636920028857.do) by [Michael Fogus](https://twitter.com/fogus)
+- [Professor Frisby's Mostly Adequate Guide to Functional Programming](https://drboolean.gitbooks.io/mostly-adequate-guide/content/ch1.html) by [Brian Lonsdorf](https://twitter.com/drboolean)
+- [JavaScript Allongé](https://leanpub.com/javascript-allonge) by [Reg Braithwaite](https://twitter.com/raganwald)
+- [Functional JavaScript](http://shop.oreilly.com/product/0636920028857.do) by [Michael Fogus](https://twitter.com/fogus)
 
 ### 博客/网站
 
 一些你应该看看的作者与内容：
 
-* [Fun Fun Function Videos](https://www.youtube.com/watch?v=BMUiFMZr7vk) by [Mattias P Johansson](https://twitter.com/mpjme)
-* [Awesome FP JS](https://github.com/stoeffel/awesome-fp-js)
-* [Kris Jenkins](http://blog.jenkster.com/2015/12/what-is-functional-programming.html)
-* [Eric Elliott](https://medium.com/@_ericelliott)
-* [James A Forbes](https://james-forbes.com/)
-* [James Longster](https://github.com/jlongster)
-* [André Staltz](http://staltz.com/)
-* [Functional Programming Jargon](https://github.com/hemanth/functional-programming-jargon#functional-programming-jargon)
-* [Functional Programming Exercises](https://github.com/InceptionCode/Functional-Programming-Exercises)
+- [Fun Fun Function Videos](https://www.youtube.com/watch?v=BMUiFMZr7vk) by [Mattias P Johansson](https://twitter.com/mpjme)
+- [Awesome FP JS](https://github.com/stoeffel/awesome-fp-js)
+- [Kris Jenkins](http://blog.jenkster.com/2015/12/what-is-functional-programming.html)
+- [Eric Elliott](https://medium.com/@_ericelliott)
+- [James A Forbes](https://james-forbes.com/)
+- [James Longster](https://github.com/jlongster)
+- [André Staltz](http://staltz.com/)
+- [Functional Programming Jargon](https://github.com/hemanth/functional-programming-jargon#functional-programming-jargon)
+- [Functional Programming Exercises](https://github.com/InceptionCode/Functional-Programming-Exercises)
 
 ### 库
 
@@ -240,10 +244,10 @@ YAGNI 挑战我们这样的想法，以让我们记住：即便在某种情况�
 
 这里是几个 JavaScript 中流行的 FP 库，它们是你开始探索的很好的起点：
 
-* [Ramda](http://ramdajs.com)
-* [lodash/fp](https://github.com/lodash/lodash/wiki/FP-Guide)
-* [functional.js](http://functionaljs.com/)
-* [Immutable.js](https://github.com/facebook/immutable-js)
+- [Ramda](http://ramdajs.com)
+- [lodash/fp](https://github.com/lodash/lodash/wiki/FP-Guide)
+- [functional.js](http://functionaljs.com/)
+- [Immutable.js](https://github.com/facebook/immutable-js)
 
 [附录 C 更深入地检视了这些库](apC.md/#stuff-to-investigate) 和其他的一些库。
 
@@ -251,12 +255,12 @@ YAGNI 挑战我们这样的想法，以让我们记住：即便在某种情况�
 
 你可能有各种理由开始读这本书，并对从中能得到的东西有着不同的期待。这一章解释了为什么我希望你阅读这本书，以及我希望你从中收获什么。它还能帮助你向其他人（比如你的开发者伙伴）清楚地说明为什么他们应当和你一起踏上这次旅行！
 
-函数式编程是关于如何基于一些业已被证明的原理来编写代码，使我们从自己编写和阅读的代码中获得更高一层的信心与信任。编写那些我们焦急地 *希望* 它能够工作的代码，然后当测试套件通过时唐突地长吁一口气 —— 我们不应满足于此。我们应当在测试运行之前就 *知道* 它能够通过，而且我们有绝对的自信说为了其他读者（包括我们未来的自己）的利益，我们已经将所有的想法在代码中交代清楚了。
+函数式编程是关于如何基于一些业已被证明的原理来编写代码，使我们从自己编写和阅读的代码中获得更高一层的信心与信任。编写那些我们焦急地 _希望_ 它能够工作的代码，然后当测试套件通过时唐突地长吁一口气 —— 我们不应满足于此。我们应当在测试运行之前就 _知道_ 它能够通过，而且我们有绝对的自信说为了其他读者（包括我们未来的自己）的利益，我们已经将所有的想法在代码中交代清楚了。
 
 这就是轻量函数式 JavaScript 的核心。它的目标是学习如何高效地与我们的代码交流，而不必翻过符号或术语的大山来做到这一点。
 
 学习函数式编程的旅行始于对函数性质的深刻理解。这是我们在下一章中要讲解的。
 
-----
+---
 
 <a name="footnote-1"><sup>1</sup></a>Buse, Raymond P. L., and Westley R. Weimer. “Learning a Metric for Code Readability.” IEEE Transactions on Software Engineering, IEEE Press, July 2010, dl.acm.org/citation.cfm?id=1850615.

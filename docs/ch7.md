@@ -28,32 +28,32 @@
 
 ```js
 function outer() {
-    var one = 1;
-    var two = 2;
+  var one = 1;
+  var two = 2;
 
-    return function inner(){
-        return one + two;
-    };
+  return function inner() {
+    return one + two;
+  };
 }
 
 var three = outer();
 
-three();            // 3
+three(); // 3
 ```
 
 以及一个简单的对象：
 
 ```js
 var obj = {
-    one: 1,
-    two: 2
+  one: 1,
+  two: 2,
 };
 
 function three(outer) {
-    return outer.one + outer.two;
+  return outer.one + outer.two;
 }
 
-three( obj );       // 3
+three(obj); // 3
 ```
 
 当你提到“闭包”时，很多人都会在脑中唤起许多额外的东西，比如异步回调，甚至是带有封装的模块模式和信息隐藏。相似地，“对象”会把类带到思维中，`this`、原型、以及一大堆其他的工具和模式。
@@ -77,17 +77,17 @@ three( obj );       // 3
 
 ```js
 function outer() {
-    var one = 1;
-    var two = 2;
+  var one = 1;
+  var two = 2;
 
-    return function inner(){
-        return one + two;
-    };
+  return function inner() {
+    return one + two;
+  };
 }
 
 var obj = {
-    one: 1,
-    two: 2
+  one: 1,
+  two: 2,
 };
 ```
 
@@ -97,9 +97,9 @@ var obj = {
 
 ```js
 var point = {
-    x: 10,
-    y: 12,
-    z: 14
+  x: 10,
+  y: 12,
+  z: 14,
 };
 ```
 
@@ -107,14 +107,14 @@ var point = {
 
 ```js
 function outer() {
-    var x = 10;
-    var y = 12;
-    var z = 14;
+  var x = 10;
+  var y = 12;
+  var z = 14;
 
-    return function inner(){
-        return [x,y,z];
-    }
-};
+  return function inner() {
+    return [x, y, z];
+  };
+}
 
 var point = outer();
 ```
@@ -125,12 +125,12 @@ var point = outer();
 
 ```js
 var person = {
-    name: "Kyle Simpson",
-    address: {
-        street: "123 Easy St",
-        city: "JS'ville",
-        state: "ES"
-    }
+  name: "Kyle Simpson",
+  address: {
+    street: "123 Easy St",
+    city: "JS'ville",
+    state: "ES",
+  },
 };
 ```
 
@@ -138,20 +138,20 @@ var person = {
 
 ```js
 function outer() {
-    var name = "Kyle Simpson";
-    return middle();
+  var name = "Kyle Simpson";
+  return middle();
 
-    // ********************
+  // ********************
 
-    function middle() {
-        var street = "123 Easy St";
-        var city = "JS'ville";
-        var state = "ES";
+  function middle() {
+    var street = "123 Easy St";
+    var city = "JS'ville";
+    var state = "ES";
 
-        return function inner(){
-            return [name,street,city,state];
-        };
-    }
+    return function inner() {
+      return [name, street, city, state];
+    };
+  }
 }
 
 var person = outer();
@@ -160,34 +160,28 @@ var person = outer();
 让我们实践一下从另一个方向走，由闭包到对象：
 
 ```js
-function point(x1,y1) {
-    return function distFromPoint(x2,y2){
-        return Math.sqrt(
-            Math.pow( x2 - x1, 2 ) +
-            Math.pow( y2 - y1, 2 )
-        );
-    };
+function point(x1, y1) {
+  return function distFromPoint(x2, y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+  };
 }
 
-var pointDistance = point( 1, 1 );
+var pointDistance = point(1, 1);
 
-pointDistance( 4, 5 );      // 5
+pointDistance(4, 5); // 5
 ```
 
 `distFromPoint(..)` 闭包着 `x1` 和 `y1`，但我们可以将这些值作为一个对象明确地传递：
 
 ```js
-function pointDistance(point,x2,y2) {
-    return Math.sqrt(
-        Math.pow( x2 - point.x1, 2 ) +
-        Math.pow( y2 - point.y1, 2 )
-    );
-};
+function pointDistance(point, x2, y2) {
+  return Math.sqrt(Math.pow(x2 - point.x1, 2) + Math.pow(y2 - point.y1, 2));
+}
 
 pointDistance(
-    { x1: 1, y1: 1 },
-    4,  // x2
-    5   // y2
+  { x1: 1, y1: 1 },
+  4, // x2
+  5 // y2
 );
 // 5
 ```
@@ -221,14 +215,12 @@ birthdayBoy();          // Happy 37th Birthday, Kyle!
 
 ```js
 var birthdayBoy = {
-    name: "Kyle",
-    age: 36,
-    happyBirthday() {
-        this.age++;
-        console.log(
-            `Happy ${this.age}th Birthday, ${this.name}!`
-        );
-    }
+  name: "Kyle",
+  age: 36,
+  happyBirthday() {
+    this.age++;
+    console.log(`Happy ${this.age}th Birthday, ${this.name}!`);
+  },
 };
 
 birthdayBoy.happyBirthday();
@@ -243,15 +235,15 @@ birthdayBoy.happyBirthday();
 
 ```js
 var person = {
-    firstName: "Kyle",
-    lastName: "Simpson",
-    first() {
-        return this.firstName;
-    },
-    last() {
-        return this.lastName;
-    }
-}
+  firstName: "Kyle",
+  lastName: "Simpson",
+  first() {
+    return this.firstName;
+  },
+  last() {
+    return this.lastName;
+  },
+};
 
 person.first() + " " + person.last();
 // Kyle Simpson
@@ -260,34 +252,34 @@ person.first() + " " + person.last();
 仅使用闭包而非对象，我们可以将这个程序表示为：
 
 ```js
-function createPerson(firstName,lastName) {
-    return API;
+function createPerson(firstName, lastName) {
+  return API;
 
-    // ********************
+  // ********************
 
-    function API(methodName) {
-        switch (methodName) {
-            case "first":
-                return first();
-                break;
-            case "last":
-                return last();
-                break;
-        };
+  function API(methodName) {
+    switch (methodName) {
+      case "first":
+        return first();
+        break;
+      case "last":
+        return last();
+        break;
     }
+  }
 
-    function first() {
-        return firstName;
-    }
+  function first() {
+    return firstName;
+  }
 
-    function last() {
-        return lastName;
-    }
+  function last() {
+    return lastName;
+  }
 }
 
-var person = createPerson( "Kyle", "Simpson" );
+var person = createPerson("Kyle", "Simpson");
 
-person( "first" ) + " " + person( "last" );
+person("first") + " " + person("last");
 // Kyle Simpson
 ```
 
@@ -301,17 +293,17 @@ person( "first" ) + " " + person( "last" );
 
 ```js
 function outer() {
-    var x = 1;
-    var y = [2,3];
+  var x = 1;
+  var y = [2, 3];
 
-    return function inner(){
-        return [ x, y[0], y[1] ];
-    };
+  return function inner() {
+    return [x, y[0], y[1]];
+  };
 }
 
 var xyPublic = {
-    x: 1,
-    y: [2,3]
+  x: 1,
+  y: [2, 3],
 };
 ```
 
@@ -321,27 +313,27 @@ var xyPublic = {
 
 ```js
 function outer() {
-    var x = 1;
-    return middle();
+  var x = 1;
+  return middle();
 
-    // ********************
+  // ********************
 
-    function middle() {
-        var y0 = 2;
-        var y1 = 3;
+  function middle() {
+    var y0 = 2;
+    var y1 = 3;
 
-        return function inner(){
-            return [ x, y0, y1 ];
-        };
-    }
+    return function inner() {
+      return [x, y0, y1];
+    };
+  }
 }
 
 var xyPublic = {
-    x: 1,
-    y: {
-        0: 2,
-        1: 3
-    }
+  x: 1,
+  y: {
+    0: 2,
+    1: 3,
+  },
 };
 ```
 
@@ -381,11 +373,11 @@ var xyPublic = {
 
 ```js
 function outer() {
-    var x = 1;
+  var x = 1;
 
-    return function inner(){
-        return x;
-    };
+  return function inner() {
+    return x;
+  };
 }
 ```
 
@@ -393,7 +385,7 @@ function outer() {
 
 ```js
 scopeOfOuter = {
-    x: 1
+  x: 1,
 };
 ```
 
@@ -401,7 +393,7 @@ scopeOfOuter = {
 
 ```js
 scopeOfInner = {};
-Object.setPrototypeOf( scopeOfInner, scopeOfOuter );
+Object.setPrototypeOf(scopeOfInner, scopeOfOuter);
 ```
 
 然后，在 `inner()` 内部，当它引用词法变量 `x` 时，实际上更像是这样：
@@ -414,7 +406,7 @@ return scopeOfInner.x;
 
 以这种方式，我们可以看到为什么 `outer()` 即使是在运行完成之后它的作用域也会被（通过闭包）保留下来：因为对象 `scopeOfInner` 链接着对象 `scopeOfOuter`，因此这可以使这个对象和它的属性完整地保留。
 
-这都是概念上的。我没说 JS 引擎使用了对象和原型。但这 *可以* 相似地工作是完全说得通的。
+这都是概念上的。我没说 JS 引擎使用了对象和原型。但这 _可以_ 相似地工作是完全说得通的。
 
 许多语言确实是通过对象实现闭包的。而另一些语言以闭包的形式实现对象。但至于它们如何工作，我们还是让读者发挥他们的想象力吧。
 
@@ -439,13 +431,13 @@ return scopeOfInner.x;
 例如，让我们想象一个游戏中对击键事件的追踪。几乎可以肯定，你想要使用一个数组来这样做：
 
 ```js
-function trackEvent(evt,keypresses = []) {
-    return [ ...keypresses, evt ];
+function trackEvent(evt, keypresses = []) {
+  return [...keypresses, evt];
 }
 
-var keypresses = trackEvent( newEvent1 );
+var keypresses = trackEvent(newEvent1);
 
-keypresses = trackEvent( newEvent2, keypresses );
+keypresses = trackEvent(newEvent2, keypresses);
 ```
 
 **注意：** 你有没有发现，为什么我没有直接向 `keypresses` 中 `push(..)`？因为在 FP 中，我们总是想将数组视为一种不可变 —— 可以被重新创建并添加新元素 —— 的数据结构，而不是直接被改变的。我们用了一个明确的重新复制将副作用的恶果替换掉了（稍后有更多关于这一点的内容）。
@@ -455,15 +447,15 @@ keypresses = trackEvent( newEvent2, keypresses );
 但数组并不是追踪不断增长的 `evt` 对象 “列表” 的唯一方式。我们可以使用闭包：
 
 ```js
-function trackEvent(evt,keypresses = () => []) {
-    return function newKeypresses() {
-        return [ ...keypresses(), evt ];
-    };
+function trackEvent(evt, keypresses = () => []) {
+  return function newKeypresses() {
+    return [...keypresses(), evt];
+  };
 }
 
-var keypresses = trackEvent( newEvent1 );
+var keypresses = trackEvent(newEvent1);
 
-keypresses = trackEvent( newEvent2, keypresses );
+keypresses = trackEvent(newEvent2, keypresses);
 ```
 
 你发现这里发生了什么吗？
@@ -484,26 +476,26 @@ keypresses = trackEvent( newEvent2, keypresses );
 
 ```js
 function outer() {
-    var x = 1;
+  var x = 1;
 
-    return function inner(){
-        return x;
-    };
+  return function inner() {
+    return x;
+  };
 }
 
 var xHidden = outer();
 
-xHidden();          // 1
+xHidden(); // 1
 ```
 
 现在是公有的相同状态：
 
 ```js
 var xPublic = {
-    x: 1
+  x: 1,
 };
 
-xPublic.x;          // 1
+xPublic.x; // 1
 ```
 
 对于一般的软件工程原理来说这里有一些明显的不同 —— 考虑到抽象，带有公共和私有 API 的模块模式，等等 —— 但是让我们将我们的讨论限定在 FP 的角度之上；毕竟，这是一本关于函数式编程的书！
@@ -516,15 +508,15 @@ xPublic.x;          // 1
 
 ```js
 function recordKeypress(keypressEvt) {
-    // 数据库工具
-    DB.store( "keypress-events", keypressEvt );
+  // 数据库工具
+  DB.store("keypress-events", keypressEvt);
 }
 ```
 
 如果你已经拥有了一个数组 —— 一个带有数字命名属性的对象 —— 那么使用一个 JS 内建的数组工具 `forEach(..)` 完成这个任务就非常直接了当：
 
 ```js
-keypresses.forEach( recordKeypress );
+keypresses.forEach(recordKeypress);
 ```
 
 但是，如果击键的列表被隐藏在闭包中的话，你就不得不在闭包的公共 API 上暴露一个工具，并使它拥有访问隐藏数据的权限。
@@ -533,28 +525,30 @@ keypresses.forEach( recordKeypress );
 
 ```js
 function trackEvent(
-    evt,
-    keypresses = {
-        list() { return []; },
-        forEach() {}
-    }
+  evt,
+  keypresses = {
+    list() {
+      return [];
+    },
+    forEach() {},
+  }
 ) {
-    return {
-        list() {
-            return [ ...keypresses.list(), evt ];
-        },
-        forEach(fn) {
-            keypresses.forEach( fn );
-            fn( evt );
-        }
-    };
+  return {
+    list() {
+      return [...keypresses.list(), evt];
+    },
+    forEach(fn) {
+      keypresses.forEach(fn);
+      fn(evt);
+    },
+  };
 }
 
 // ..
 
-keypresses.list();      // [ evt, evt, .. ]
+keypresses.list(); // [ evt, evt, .. ]
 
-keypresses.forEach( recordKeypress );
+keypresses.forEach(recordKeypress);
 ```
 
 一对象的状态数据的可见性使得它使用起来更直接，而闭包隐晦的状态使我们不得不做更多的工作来处理它。
@@ -594,21 +588,21 @@ keypresses.forEach( recordKeypress );
 数组很容易浅克隆 —— 使用 `slice()` 方法就行：
 
 ```js
-var a = [ 1, 2, 3 ];
+var a = [1, 2, 3];
 
 var b = a.slice();
-b.push( 4 );
+b.push(4);
 
-a;          // [1,2,3]
-b;          // [1,2,3,4]
+a; // [1,2,3]
+b; // [1,2,3,4]
 ```
 
 对象也可以相对容易地进行浅克隆：
 
 ```js
 var o = {
-    x: 1,
-    y: 2
+  x: 1,
+  y: 2,
 };
 
 // 在 ES2017+ 中，使用对象扩散操作：
@@ -616,7 +610,7 @@ var p = { ...o };
 p.y = 3;
 
 // 在 ES2015+ 中：
-var p = Object.assign( {}, o );
+var p = Object.assign({}, o);
 p.y = 3;
 ```
 
@@ -639,13 +633,13 @@ p.y = 3;
 让我们使用两种实现考虑同一个场景。首先，闭包风格的实现：
 
 ```js
-function StudentRecord(name,major,gpa) {
-    return function printStudent(){
-        return `${name}, Major: ${major}, GPA: ${gpa.toFixed(1)}`;
-    };
+function StudentRecord(name, major, gpa) {
+  return function printStudent() {
+    return `${name}, Major: ${major}, GPA: ${gpa.toFixed(1)}`;
+  };
 }
 
-var student = StudentRecord( "Kyle Simpson", "kyle@some.tld", "CS", 4 );
+var student = StudentRecord("Kyle Simpson", "kyle@some.tld", "CS", 4);
 
 // 稍后
 
@@ -658,17 +652,16 @@ student();
 现在轮到对象（和 `this`）的方式了：
 
 ```js
-function StudentRecord(){
-    return `${this.name}, Major: ${this.major}, \
+function StudentRecord() {
+  return `${this.name}, Major: ${this.major}, \
 GPA: ${this.gpa.toFixed(1)}`;
 }
 
-var student = StudentRecord.bind( {
-    name: "Kyle Simpson",
-    major: "CS",
-    gpa: 4
-} );
-
+var student = StudentRecord.bind({
+  name: "Kyle Simpson",
+  major: "CS",
+  gpa: 4,
+});
 
 // 稍后
 
@@ -680,20 +673,20 @@ student();
 
 这两种实现都有相同的结果：一个保留着状态的函数。那么性能呢？会有什么不同？
 
-**注意：** 准确地、可操作地判断一段 JS 代码的性能是一件非常棘手的事情。我们不会在此深入所有的细节，但我强烈建议你阅读 *“你不懂 JS：异步与性能”* 一书，特别是第六章 “基准分析与调优”，来了解更多细节。
+**注意：** 准确地、可操作地判断一段 JS 代码的性能是一件非常棘手的事情。我们不会在此深入所有的细节，但我强烈建议你阅读 _“你不懂 JS：异步与性能”_ 一书，特别是第六章 “基准分析与调优”，来了解更多细节。
 
 如果你在编写一个库，它创建一个带有函数的状态 —— 要么是一个代码段中对 `StudentRecord(..)` 的调用，要么是第二个代码段中对 `StudentRecord.bind(..)` 的调用 —— 你最关心的很可能是它们两个如何工作。检视它们的代码，我们可以发现前者不得不每次创建一个新的函数表达式。而第二个使用了 `bind(..)`，这由于它的隐晦而不那么明显。
 
 考虑 `bind(..)` 在底层如何工作的一种方式是，它在函数之上创建了一个闭包，就像这样：
 
 ```js
-function bind(orinFn,thisObj) {
-    return function boundFn(...args) {
-        return origFn.apply( thisObj, args );
-    };
+function bind(orinFn, thisObj) {
+  return function boundFn(...args) {
+    return origFn.apply(thisObj, args);
+  };
 }
 
-var student = bind( StudentRecord, { name: "Kyle.." } );
+var student = bind(StudentRecord, { name: "Kyle.." });
 ```
 
 以这种方式，看起来我们这种场景的两种实现都创建了闭包，因此它们的性能很可能是相同的。
@@ -716,7 +709,7 @@ var student = bind( StudentRecord, { name: "Kyle.." } );
 
 这一章的真理是无法付诸笔头的。你必须阅读这一章来找出它的真理。
 
-----
+---
 
 在这里提出一些禅的智慧不过是我想让自己显得聪明一些。但你需要对本章内容的一些恰当总结。
 
