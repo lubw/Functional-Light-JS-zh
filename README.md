@@ -6,7 +6,7 @@
 
 在线阅读：[http://gdut_yy.gitee.io/doc-fljs/ch1.html](http://gdut_yy.gitee.io/doc-fljs/ch1.html)
 
-<img src="./docs/images/marketing/front-cover-small.png" width=40% />
+<img src="./docs/images/marketing/front-cover-small.png" width=24% />
 
 ## 目录
 
@@ -29,7 +29,9 @@
 
 ## 本地开发 & 阅读
 
-本项目基于 vuepress 进行开发，以提供比 github mardown 更佳的阅读体验，依赖于 `node.js`、`yarn`、`vuepress` 等环境
+本项目基于 vuepress 进行开发，以提供比 github mardown 更佳的阅读体验
+
+依赖于 `node.js`、`yarn`、`vuepress` 等环境
 
 ```sh
 # vuepress

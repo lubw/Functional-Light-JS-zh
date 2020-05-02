@@ -1,6 +1,6 @@
 # 轻量函数式 JavaScript 中文
 
-<a href="https://leanpub.com/fljs"><img src="./images/marketing/front-cover-small.png" width="20%"></a>
+<img src="./images/marketing/front-cover-small.png" width="28%" />
 
 ## 目录
 
